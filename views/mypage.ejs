@@ -12,6 +12,19 @@
   <%- include('nav.html') %>
 
   <h4 class="container mt-4"> <%= 사용자.id %>의 페이지입니다~ </h4>
+  <div class="container mt-4"> 
+    <form action="/login" method="POST"> 
+      <div class="form-group"> 
+        <label>아이디</label> 
+        <input type="text" class="form-control" name="id"> 
+      </div> 
+      <div class="form-group"> 
+        <label>비번</label> 
+        <input type="text" class="form-control" name="pw"> 
+      </div> 
+      <button type="submit" class="btn btn-danger">로그인</button> 
+    </form> 
+  </div> 
 
 
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

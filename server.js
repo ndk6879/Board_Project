@@ -61,8 +61,6 @@ app.post('/signup', (요청,응답) => {
     응답.send('회원가입 완료!');
 })
 
-      
-  
 
 // // 로그인에 필요한 라이브러리 호출
 const passport = require('passport');
