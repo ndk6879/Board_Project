@@ -162,3 +162,8 @@ db.collection('user').findOne({ id: 아이디 }, function (에러, 결과) {
     done(null, 결과)
 })
 }); 
+
+
+/*
+commit message test
+*/
