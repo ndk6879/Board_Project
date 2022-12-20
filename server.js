@@ -7,6 +7,10 @@ const app = express();
 const { swaggerUi, specs } = require("./swagger/swagger")
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs))
 
+
+
+
+
 // ejs 사용을 위한 코드
 app.set('view engine', 'ejs');
 
@@ -47,12 +51,15 @@ app.get('/', function(요청, 응답) {
 //     응답.render('write.ejs');
 // })
 
-app.post('/add', (요청,응답) => {
-    // db.collection('post').insertOne()
+// app.post('/add', (요청,응답) => {
+//     // db.collection('post').insertOne('author' : , 'title' : , 'content' : )
 
-    응답.send(요청.body.title, 요청.body.content)
-    console.log('add로 요청한 write의 POST요청 성공')
-})
+
+//     // 응답.redirect('/list') 
+//     응답.send(요청.user)
+//     console.log('요청.user in add API:',요청.user)
+//     console.log('add로 요청한 write의 POST요청 성공')
+// })
 
 app.post('/signup', (요청,응답) => {
     db.collection('user').insertOne({id : 요청.body.id , pw : 요청.body.pw}, (에러, 결과) => {
@@ -79,6 +86,7 @@ app.get('/login', function(요청, 응답) {
 // 1. 아이디 비번 인증도와주는 코드
 app.post('/login', passport.authenticate('local', {failureRedirect : '/fail'}), function(요청, 응답){
     응답.redirect('/');
+    console.log('요청.user:', 요청.user)
     console.log('authenticate 성공');
 });
 
@@ -90,7 +98,18 @@ app.get('/mypage', 로그인했니, function (요청, 응답) {
 
 app.get('/write', 로그인했니, (요청, 응답) => {
     console.log('write을 위한 로그인이 된상태')
+    console.log('요청.user:', 요청.user)
     응답.render('write.ejs');
+})
+
+app.post('/add', (req,res) => {
+    // db.collection('post').insertOne('author' : , 'title' : , 'content' : )
+
+
+    // 응답.redirect('/list') 
+    res.send({ 'req.body':req.body, 'req.user.id':req.user})
+    console.log('req.user in add API:',req.user)
+    console.log('add로 요청한 write의 POST요청 성공')
 })
 
 function 로그인했니(요청, 응답, next) { 
@@ -130,6 +149,8 @@ passport.use(new LocalStrategy({
 /* 
 serializer
 : 입력한 아이디/비번이 db의 값과 맞다면 -> 세션 방식이 적용됨. 그래서 세션 데이터를 만들어줘야함.(라브가 함) 그리고 세션 데이터에 세션아이디를 발급해 유저에게 보내야함. (i.e. 쿠키로 만들어서 보내주면됨. )
+
+In short, 세션을 만들어줌
 */
 passport.serializeUser(function (user, done) {
     console.log('serializeUser user ==', user)
