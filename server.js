@@ -103,13 +103,22 @@ app.get('/write', 로그인했니, (요청, 응답) => {
 })
 
 app.post('/add', (req,res) => {
-    // db.collection('post').insertOne('author' : , 'title' : , 'content' : )
+    var 날짜 = new Date();
 
+    db.collection('post').insertOne( {author : req.user.id, date : 날짜.toLocaleDateString().replace(/\./g, '').replace(/\s/g, '-'), title : req.body.title, content : req.body.content}, (에러, 결과) => {
+        console.log('게시글 생성 완료!');
+        // 응답.redirect('/list') 
+        res.send({ 'req.body':req.body, 'req.user.id':req.user});
+        console.log('req.user in add API:',req.user);
+        console.log('add로 요청한 write의 POST요청 성공');
+    } )
+})
 
-    // 응답.redirect('/list') 
-    res.send({ 'req.body':req.body, 'req.user.id':req.user})
-    console.log('req.user in add API:',req.user)
-    console.log('add로 요청한 write의 POST요청 성공')
+app.get('/post', (req, res) => {
+    db.collection('post').find().toArray( (에러, 결과) => {
+        console.log('결과:',결과);
+        res.render('post.ejs', {결과: 결과})
+    });
 })
 
 function 로그인했니(요청, 응답, next) { 
