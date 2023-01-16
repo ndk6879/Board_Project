@@ -43,23 +43,17 @@ get mypage
 
 
 app.get('/', function(요청, 응답) {
-    응답.render('index.ejs');
+    db.collection('post').find({type : 'forum'}).toArray( (에러1, 결과1) => {
+        db.collection('post').find({type : 'QA'}).toArray( (에러2, 결과2) => {
+            console.log('결과1:',결과1);
+            console.log('결과2:',결과2);
+            응답.render('index.ejs', {결과1 : 결과1, 결과2 : 결과2});
+        });
+        
+    });
+    
 });
- 
-// app.get('/write', 로그인했니, (요청, 응답) => {
-//     console.log('write을 위한 로그인이 된상태')
-//     응답.render('write.ejs');
-// })
 
-// app.post('/add', (요청,응답) => {
-//     // db.collection('post').insertOne('author' : , 'title' : , 'content' : )
-
-
-//     // 응답.redirect('/list') 
-//     응답.send(요청.user)
-//     console.log('요청.user in add API:',요청.user)
-//     console.log('add로 요청한 write의 POST요청 성공')
-// })
 
 app.post('/signup', (요청,응답) => {
     db.collection('user').insertOne({id : 요청.body.id , pw : 요청.body.pw}, (에러, 결과) => {
@@ -103,16 +97,27 @@ app.get('/write', 로그인했니, (요청, 응답) => {
 })
 
 app.post('/add', (req,res) => {
-    var 날짜 = new Date();
+    db.collection('counter').findOne({name : '게시물갯수'}, function(에러, 결과){
+        var 총게시물갯수 = 결과.totalPost;
+        var 날짜 = new Date();
 
-    db.collection('post').insertOne( {author : req.user.id, date : 날짜.toLocaleDateString().replace(/\./g, '').replace(/\s/g, '-'), title : req.body.title, content : req.body.content}, (에러, 결과) => {
-        console.log('게시글 생성 완료!');
-        // 응답.redirect('/list') 
-        res.send({ 'req.body':req.body, 'req.user.id':req.user});
-        console.log('req.user in add API:',req.user);
-        console.log('add로 요청한 write의 POST요청 성공');
-    } )
+        db.collection('post').insertOne( {_id: 총게시물갯수 + 1, author : req.user.id, date : 날짜.toLocaleDateString().replace(/\./g, '').replace(/\s/g, '-'), title : req.body.title, content : req.body.content, type : req.body.type}, (에러, 결과) => {
+            console.log('게시글 생성 완료!');
+            
+            // 응답.redirect('/list') 
+            // res.send({ 'req.body':req.body, 'req.user.id':req.user});
+            console.log('req.user in add API:',req.user);
+            console.log('add로 요청한 write의 POST요청 성공');
+            db.collection('counter').updateOne({name:'게시물갯수'},{ $inc: {totalPost:1} },function(에러, 결과){
+                if(에러){return console.log(에러)}
+                else {res.send({ 'req.body':req.body, 'req.user.id':req.user});}
+                    
+            })
+        })
+    })
 })
+
+
 
 app.get('/post', (req, res) => {
     db.collection('post').find().toArray( (에러, 결과) => {

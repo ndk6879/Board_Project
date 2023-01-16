@@ -16,12 +16,22 @@
   <div class="container mt-3">
     <form action="/add" method="POST">
       <div class="form-group">
+        
+        <label>종류</label>
+        <div>
+          <select name="type">
+            <option value="forum" selected="selected">Forum</option>
+            <option value="QA">QA</option>
+          </select>
+        </div>
+        <br>
+
         <label>제목</label>
-        <input type="text" class="form-control" name="title">
+        <input type="text" placeholder="제목을 입력해 주세요." class="form-control" name="title">
       </div>
       <div class="form-group">
         <label>내용</label>
-        <input type="text" class="form-control" name="content">
+        <textarea class="form-control" name="content" placeholder="내용을 입력해 주세요." cols="50" rows="10"></textarea>
       </div>
       <button type="submit" class="btn btn-outline-secondary">Submit</button>
     </form>
