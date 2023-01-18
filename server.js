@@ -18,6 +18,25 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: true})) 
 
 
+
+
+
+//react 연동시키는 코드
+app.use(express.static(path.join(__dirname, 'board_project/build')));
+
+app.get('/', function (요청, 응답) {
+    응답.sendFile(path.join(__dirname, '/board_project/build/index.html'));
+  });
+
+
+
+
+
+
+
+
+
+
 // DB 연결 시키는 코드
 var db;
 const MongoClient = require('mongodb').MongoClient
@@ -178,6 +197,9 @@ db.collection('user').findOne({ id: 아이디 }, function (에러, 결과) {
 }); 
 
 
-/*
-commit message test
-*/
+
+
+// 리액트가 모든 라우팅을 담당하게 하는 코드
+app.get('*', function (요청, 응답) {
+    응답.sendFile(path.join(__dirname, '/board_project/build/index.html'));
+  });
