@@ -1,26 +1,8 @@
-.black-nav {
-  background : black;
-  width : 100%;
-  display : flex;
-  color : white;
-  padding : 20px;
-}
-
-div {
-  box-sizing : border-box
-}
-
-.modal{
-  margin-top : 20px;
-  padding : 20px;
-  background : #eee;
+/* 눌렀을 때 글자 색 보라색으로 바뀌지 말라고 */
+.link-style {
+  color : black;
+  text-decoration : none;
   text-align : left;
-}
-
-.list {
-  text-align : left;
-  padding-left : 20px;
-  border-bottom : 1px solid grey;
 }
 
 .App {
