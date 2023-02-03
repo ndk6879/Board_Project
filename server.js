@@ -22,11 +22,11 @@ app.use(express.urlencoded({extended: true}))
 
 
 //react 연동시키는 코드
-app.use(express.static(path.join(__dirname, 'board_project/build')));
+// app.use(express.static(path.join(__dirname, 'board_project/build')));
 
-app.get('/', function (요청, 응답) {
-    응답.sendFile(path.join(__dirname, '/board_project/build/index.html'));
-  });
+// app.get('/', function (요청, 응답) {
+//     응답.sendFile(path.join(__dirname, '/board_project/build/index.html'));
+//   });
 
 
 
@@ -59,6 +59,18 @@ post signup
 get/post login
 get mypage
 */ 
+
+app.get('/list/post', (req, res) => {
+    db.collection('post').find().toArray( (에러, 결과) => {
+        res.json(결과)
+    });
+})
+
+app.get('/list/user', (req, res) => {
+    db.collection('user').find().toArray( (에러, 결과) => {
+        res.json(결과)
+    });
+})
 
 
 app.get('/', function(요청, 응답) {
