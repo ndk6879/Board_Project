@@ -1,10 +1,50 @@
 /* eslint-disable */
 
-function Comment() {
+import styled from "styled-components";
+
+let OutsideBox = styled.div`
+    width : 90%;
+    height : fit-content;
+    margin : auto;
+    margin-top : 20px;
+    margin-bottom : 20px;
+`
+
+let Writer = styled.div`
+    width : fit-content;
+    text-align : left;
+    padding-left : 10px;
+    float : left;
+`
+
+let Date = styled.div`
+    width : 20px;
+    padding-left : 15px;
+    float : left;
+    font-size : 13px;
+`
+
+let Content = styled.div`
+    clear : left;
+    padding : 12px;
+    text-align : left;
+    padding-left : 10px;
+    height : fit-content;
+    white-space : pre-line;
+`
+
+function Comment(props) {
     return (
-        <div>
-            댓글 목록 만들어야지
-        </div>
+        <>
+            <OutsideBox>
+                <div style={{ position : "relative"}}>
+                    <Writer>{props.data.writer}</Writer>
+                    <Date>{props.data.date}</Date>
+                </div>
+                <Content>{props.data.content}</Content>
+            </OutsideBox>
+            <hr style={{ width : "90%" }}/>
+        </>
     );
 }
 

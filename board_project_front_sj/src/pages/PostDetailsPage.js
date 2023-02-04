@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import PostContent from "../components/PostContent.js";
 import Comment from "../components/Comment.js";
 import AddComment from "../components/AddComment.js";
+import CommentData from "../store/CommentData.js";  // 댓글 출력 테스트
 
 function PostDetailsPage(props) {
 
@@ -21,7 +22,7 @@ function PostDetailsPage(props) {
             */}
             
             <PostContent post={post}/>
-            <Comment/> {/* 댓글 개수만큼 나오도록 ?? */}
+            { CommentData.map((data, i) => <Comment key={i} data={data}/>)   /* 댓글 개수만큼 나오도록 */}
             <AddComment/>
         </div>
     );
