@@ -10,7 +10,6 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs))
 
 
 
-
 // ejs 사용을 위한 코드
 app.set('view engine', 'ejs');
 
@@ -22,19 +21,24 @@ app.use(express.urlencoded({extended: true}))
 
 
 //react 연동시키는 코드
-// app.use(express.static(path.join(__dirname, 'board_project_front_sj/build')));
+app.use(express.static(path.join(__dirname, 'board_project_front_sj/build')));
 
-// app.get('/', function (요청, 응답) {
-//     응답.sendFile(path.join(__dirname, '/board_project_front_sj/build/index.html'));
-//   });
-
-
+app.get('/', function (요청, 응답) {
+    응답.sendFile(path.join(__dirname, '/board_project_front_sj/build/index.html'));
+  });
 
 
 
 
-
-
+/*
+ajax요청을 위한 코드
+1. 서버프로젝트 터미널에서 npm install cors 설치
+2. express.json() 은 유저가 보낸 array/object 데이터를 출력해보기 위해 필요
+3. cors는 다른 도메인주소끼리 ajax 요청 주고받을 때 필요합니다. 
+*/
+app.use(express.json());
+var cors = require('cors');
+app.use(cors());
 
 
 // DB 연결 시키는 코드
@@ -94,7 +98,7 @@ app.post('/signup', (요청,응답) => {
 })
 
 
-// // 로그인에 필요한 라이브러리 호출
+// 로그인에 필요한 라이브러리 호출
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
@@ -215,3 +219,5 @@ db.collection('user').findOne({ id: 아이디 }, function (에러, 결과) {
 app.get('*', function (요청, 응답) {
     응답.sendFile(path.join(__dirname, '/board_project_front_sj/build/index.html'));
   });
+
+  
