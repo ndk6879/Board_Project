@@ -12,7 +12,7 @@ let Background = styled.div`
     z-index : 150;  // 캐러셀 버튼 z-index가 100임
 `
 
-let LoginBox = styled.div`
+let ModalBox = styled.div`
     width : 300px;
     height : 200px;
     float : right;
@@ -77,7 +77,7 @@ function LoginModal(props) {
 
     return (
         <Background onClick={() => { props.setLoginModal(false) }}>
-            <LoginBox onClick={e => { e.stopPropagation() }}>
+            <ModalBox onClick={e => { e.stopPropagation() }}>
                 로그인하자~~
                 <InputLoginData
                 placeholder = "아이디"
@@ -95,7 +95,7 @@ function LoginModal(props) {
                     <LoginMenu>ID찾기</LoginMenu>
                     <LoginMenu>PW찾기</LoginMenu>
                 </div>
-            </LoginBox>
+            </ModalBox>
         </Background>
     );
 }
