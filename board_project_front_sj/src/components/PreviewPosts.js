@@ -116,7 +116,7 @@ function PreviewPosts(props) {
                     }
                 </tbody>
             </ListOfPosts>
-            <MoreBtn>더보기</MoreBtn>
+            <MoreBtn onClick={() => { navigate(`/${props.category}`)}}>더보기</MoreBtn>
 
         </OutsideBox>
     );

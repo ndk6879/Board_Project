@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import logo from "../logo.svg";
 import LoginModal from "./LoginModal.js";
+import MyPageModal from "./MyPageModal.js";
 
 let Background = styled.div`
     background-color : powderblue;
@@ -44,6 +45,8 @@ let LoginModalBtn = styled.div`
 function Navbar() {
 
     let [loginModal, setLoginModal] = useState(false);
+    let [isLoggedIn, setIsLoggedIn] = useState(false);
+    let [myPageModal, setMyPageModal] = useState(false);
     let navigate = useNavigate();
 
     return (
@@ -56,11 +59,16 @@ function Navbar() {
                 </Link>
                 {/* <Logo onClick={() => {navigate("/")}}><LogoImg src={logo}/>Navbar</Logo>
                     -> 이런 식으로는? div에 navigate 써도 되나 */}
+                {
+                    !isLoggedIn
+                    ? <LoginModalBtn onClick={() => { setLoginModal(!loginModal) }}>Login / Sign up</LoginModalBtn>
+                    : <LoginModalBtn onClick={() => { setMyPageModal(!myPageModal)}}>My Page / Logout</LoginModalBtn>
+                }
                 
-                <LoginModalBtn onClick={() => { setLoginModal(!loginModal) }}>Login / Sign up</LoginModalBtn>
             </Background>
             <div style={{ position : "relative" }}>
-                { loginModal && <LoginModal setLoginModal={setLoginModal}/> }
+                { loginModal && <LoginModal setIsLoggedIn={setIsLoggedIn} setLoginModal={setLoginModal}/> }
+                { myPageModal && <MyPageModal setIsLoggedIn={setIsLoggedIn} setMyPageModal={setMyPageModal}/> }
             </div>
             
         </div>
