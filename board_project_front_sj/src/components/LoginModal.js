@@ -1,8 +1,8 @@
 /* eslint-disable */
 
 import styled from "styled-components";
-import { useState } from "react";
-import LoginData from "../store/LoginData.js";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 let Background = styled.div`
     position : absolute;
@@ -55,41 +55,53 @@ function LoginModal(props) {
     let [inputPw, setInputPw] = useState('');
 
     /*
-    로그인 버튼을 눌렀을 때 입력받은 ID, PW가
-    회원가입 되어있는 유저의 ID, PW와 일치하는지 확인하는 함수
-    - 일치하면 로그인
-    - 일치하지 않으면 경고창 띄우기
+    입력된 데이터를 서버로 보내는 함수
+    - 입력된 ID, PW가 DB의 유저 정보와 같은 경우에만 로그인 허용하기 위해
+    - ID, PW가 입력되지 않았다면 로그인을 시도하지 않음
+    - ID, PW 조건이 추가된다면 충족하는 경우에만 로그인을 시도하도록 수정할 예정
     */
-    let checkUserData = () => {
-        let isFound = false;
-        LoginData.map(data => {
-            if (inputId == data.id) {
-                if (inputPw == data.pw) {
-                    isFound = true;
-                    props.setIsLoggedIn(true);
-                    props.setLoginModal(false);
-                }
-                else console.log("아이디 찾았는데 비밀번호 틀림");
-            }
-        })
-        if (!isFound) alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+    let tryLogin = (e) => {
+        e.preventDefault();
+
+        let body = {
+            id : inputId,
+            pw : inputPw
+        };
+
+        if (!inputId) return alert("ID를 입력하세요.");
+        else if (!inputPw) return alert("PW를 입력하세요.");
+
+        axios.post("/login", body)
+        .then(response => {
+            console.log("성공!");
+            console.log(('data:' + JSON.stringify(body)));
+            console.log(response.data);
+        }).catch((res) => { 
+            console.log("에러;;;");
+            console.log("wrong data:" + JSON.stringify(body));
+            console.log('res:', res);
+
+        });
     }
 
     return (
         <Background onClick={() => { props.setLoginModal(false) }}>
             <ModalBox onClick={e => { e.stopPropagation() }}>
-                로그인하자~~
-                <InputLoginData
-                placeholder = "아이디"
-                onChange={e => { setInputId(e.target.value); }}
-                />
-                <InputLoginData
-                placeholder = "비밀번호"
-                type="password"
-                onChange={e => { setInputPw(e.target.value); }}
-                onKeyDown={e => { e.key == "Enter" && checkUserData() }}
-                />
-                <LoginBtn onClick={ checkUserData }>로그인!</LoginBtn>
+                <form onSubmit={ tryLogin }>
+                    <InputLoginData
+                    placeholder="아이디"
+                    name="id"
+                    onChange={e => { setInputId(e.target.value); }}
+                    />
+                    <InputLoginData
+                    placeholder="비밀번호"
+                    name="pw"
+                    type="password"
+                    onChange={e => { setInputPw(e.target.value); }}
+                    />
+                    <div style={{fontSize : "13px",}}>아이디 저장 / 자동 로그인 만들어야지</div>
+                    <LoginBtn type="submit">로그인!</LoginBtn>
+                </form>
                 <div style={{ display : "inline-block", verticalAlign : "middle" }}>
                     <LoginMenu>회원가입</LoginMenu>
                     <LoginMenu>ID찾기</LoginMenu>
