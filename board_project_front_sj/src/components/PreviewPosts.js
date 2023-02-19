@@ -4,36 +4,53 @@ import "../App.css";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 
-let OutsideBox = styled.div`
+let ContainerBox = styled.div`
     width : 90vw;
     margin : auto;
-    margin-bottom : 40px;  // 이거 없으면 Q&A랑 더보기랑 겹친다???
+    margin-bottom : 40px;
+`
+
+let Header = styled.div`
+    width : 100%;
+    margin : auto;
+    margin-bottom : 8px;
+    display : flex;
+    align-items : center;  // 자식 요소의 세로 정렬
+    justify-content : flex-start;  // 자식 요소의 가로 정렬
 `
 
 let CategoryTitle = styled.div`
-    width : 100%;
-    margin : auto;
-    padding : 10px;
-    text-align : left;
-    font-size : x-large;
+    margin-left : 3px;
+    margin-right : auto;  // 더보기 버튼 오른쪽에 붙이기
+    text-align : left;  // 글 왼쪽 정렬
+    font-size : 23px;
+`
+
+let MoreBtn = styled.button`
+    width : 60px;
+    height : 28px;
+    font-size : 14px;
+    background-color : powderblue;
+    border : thin solid black;
+    border-radius: 5px;
 `
 
 let ListOfPosts = styled.table`
     width : 100%;
     margin : auto;
     border : 1px solid black;
-    // 모서리 둥글게 근데 배경색 채우니까 쫌 이상함
+    // 모서리 둥글게
     border-collapse : collapse;
     border-radius : 5px;
     border-style : hidden;
     box-shadow : 0 0 0 1px #000;  // 뭔뜻일까
 `
 
-let ColumnTitle = styled.tr`
-    border : 1px solid black;
-    background-color : powderblue;
-    height : 35px;
-`
+// let ColumnTitle = styled.tr`
+//     border : 1px solid black;
+//     background-color : powderblue;
+//     height : 35px;
+// `
 
 let PostInfo = styled.tr`
     border : 1px solid lightgray;
@@ -42,8 +59,8 @@ let PostInfo = styled.tr`
 `
 
 let TitleInfo = styled.td`
-    padding-left : 15px;  // margin으로 하면 안먹힘
-    width : 65%;  // 이렇게 말고,,
+    padding-left : 15px;
+    width : 80%;  // 이렇게 말고,,
 `
 
 let Title = styled.div`
@@ -62,18 +79,6 @@ let Comment = styled.div`
     float : left;
 `
 
-let MoreBtn = styled.button`
-    float : right;
-    margin : 10px;
-    padding : 3px;
-    padding-left : 7px;
-    padding-right : 7px;
-    font-size : 14px;
-    background-color : powderblue;
-    border : thin solid black;
-    border-radius: 5px;
-`
-
 function PreviewPosts(props) {
         
     let copyForShowContents = [...props.contents.slice(-5, )].reverse();  { /*최근 5개, 최신순으로 */}
@@ -81,17 +86,20 @@ function PreviewPosts(props) {
 
     return(
 
-        <OutsideBox>
+        <ContainerBox>
 
-            <CategoryTitle>{props.categoryTitle}</CategoryTitle>
+            <Header>
+                <CategoryTitle>{props.categoryTitle}</CategoryTitle>
+                <MoreBtn onClick={() => { navigate(`/${props.category}`)}}>더보기</MoreBtn>
+            </Header>
             <ListOfPosts>
-                <thead>
+                {/* <thead>
                     <ColumnTitle>
                         <th style={{ width : "60%" }}>글제목</th>
                         <th>조회수</th>
                         <th>작성일</th>
                     </ColumnTitle>
-                </thead>
+                </thead> */}
                 <tbody>
                     {
                         copyForShowContents.map((data, i) => {
@@ -106,19 +114,18 @@ function PreviewPosts(props) {
                                             - 마우스 갖다대도 손가락으로 안 바뀜..바꿀거야
                                             */}
                                         }}>{data.title}</Title>
-                                        <Comment>[{data.comments}]</Comment>
+                                        <Comment>[0]</Comment>
                                     </TitleInfo>
-                                    <td>{data.hits}</td>
-                                    <td>{data.date}</td>
+                                    {/* <td>{data.hits}</td> */}
+                                    <td style={{ marginLeft : "auto", marginRight : "auto" }}>{data.date}</td>
                                 </PostInfo>
                             )
                         })
                     }
                 </tbody>
             </ListOfPosts>
-            <MoreBtn onClick={() => { navigate(`/${props.category}`)}}>더보기</MoreBtn>
 
-        </OutsideBox>
+        </ContainerBox>
     );
 }
 

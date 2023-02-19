@@ -73,7 +73,7 @@ let LogoutBtn = styled.button`
 function MyPageModal(props) {
     return (
         <Background onClick={() => { props.setMyPageModal(false) }}>
-            <ModalBox>
+            <ModalBox onClick={ e => e.stopPropagation() }>
                 <ProfileBox>
                     <UserProfile src={userImg}/>
                     <UserInfo>이름 : 유저이름</UserInfo>
