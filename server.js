@@ -117,10 +117,10 @@ app.get('/login', function(요청, 응답) {
 // 1. 아이디 비번 인증도와주는 코드
 // 미들웨어(passport.authenticate())는 return done(null, 결과). 결과 = { _id: 638d7674ff68b04761143c0f, id: 'test', pw: 'test' }
 app.post('/login', passport.authenticate('local', {failureRedirect : '/fail'}), function(요청, 응답){
-    응답.redirect('/');
     console.log('요청.user:', 요청.user)
-    // console.log('응답:', 응답) //너무 길다리
-    console.log('authenticate 성공 haha');
+    console.log('Authentication 성공');
+    응답.json({ data: 요청.user, message: 'OK' });
+
 });
 
 
@@ -178,6 +178,7 @@ else {
 어떻게 인증할건지 세부 코드
 LocalStrategy(): 이게 여러분 local 방식으로 아이디/비번 검사를 어떻게 할지 도와주는 부분
 */
+
 passport.use(new LocalStrategy({
     usernameField: 'id', // 사용자가 제출한 아이디가 어떤 <input>인지 확인. <input>의 name 속성값을 적어주시면 됩
     passwordField: 'pw', // 사용자가 제출한 비번이 어떤 <input>인지 확인. <input>의 name 속성값을 적어주시면 됩
@@ -193,6 +194,7 @@ passport.use(new LocalStrategy({
     
         if (!결과) return done(null, false, { message: '존재하지않는 아이디요' })
         if (입력한비번 == 결과.pw) {
+            
         return done(null, 결과)
         } else {
         return done(null, false, { message: '비번틀렸어요' })
