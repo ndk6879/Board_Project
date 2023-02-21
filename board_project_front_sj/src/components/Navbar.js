@@ -3,7 +3,7 @@
 import "../App.css"
 
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import logo from "../logo.svg";
 import LoginModal from "./LoginModal.js";
@@ -40,6 +40,7 @@ let LoginModalBtn = styled.div`
     align-items : center;
     //line-height : 50px;  // 줄 너비 = div height, 근데 이거 한 줄짜리만 될 듯
     font-size : 17px;
+    cursor : pointer;
 `
 
 function Navbar() {
@@ -47,7 +48,11 @@ function Navbar() {
     let [loginModal, setLoginModal] = useState(false);
     let [isLoggedIn, setIsLoggedIn] = useState(false);
     let [myPageModal, setMyPageModal] = useState(false);
+    let [userData, setUserData] = useState({});  // 로그인 성공시 서버에서 받을 유저 정보
+
     let navigate = useNavigate();
+
+    //useEffect(() => { console.log(userData) }, [userData]);
 
     return (
         <div>
@@ -67,8 +72,8 @@ function Navbar() {
                 
             </Background>
             <div style={{ position : "relative" }}>
-                { loginModal && <LoginModal setIsLoggedIn={setIsLoggedIn} setLoginModal={setLoginModal}/> }
-                { myPageModal && <MyPageModal setIsLoggedIn={setIsLoggedIn} setMyPageModal={setMyPageModal}/> }
+                { loginModal && <LoginModal setIsLoggedIn={setIsLoggedIn} setLoginModal={setLoginModal} setUserData={setUserData}/> }
+                { myPageModal && <MyPageModal setIsLoggedIn={setIsLoggedIn} setMyPageModal={setMyPageModal} userData={userData} setUserData={setUserData}/> }
             </div>
             
         </div>

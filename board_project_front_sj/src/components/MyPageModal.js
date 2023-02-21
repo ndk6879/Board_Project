@@ -2,6 +2,9 @@
 
 import styled from "styled-components";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
 import userImg from "../img/user.png";
 
 let Background = styled.div`
@@ -47,6 +50,7 @@ let UserInfo = styled.div`
     margin-top : 20px;
     margin-left : 22px;
     margin-bottom : 5px;
+    font-size : 15px;
 `
 
 let BtnInProfile = styled.button`
@@ -58,6 +62,7 @@ let BtnInProfile = styled.button`
     margin : 3px;
     margin-left : 5px;
     font-size : 15px;
+    cursor : pointer;
 `
 
 let LogoutBtn = styled.button`
@@ -68,22 +73,47 @@ let LogoutBtn = styled.button`
     border-radius : 5px;
     margin-top : 7px;
     font-size : 15px;
+    cursor : pointer;
 `
 
+// 로그인 상태에서 상단바의 'My Page / Logout' 을 누르면 보여줄 모달
 function MyPageModal(props) {
+
+    let navigate = useNavigate();
+
+    let logout = e => {
+        e.preventDefault();
+
+        axios.post("/logout", "logout")
+        .then(response => {
+            console.log("from server:", response.data);
+            if (response.data.message == "logout") {
+                alert("로그아웃 완료!");
+                props.setIsLoggedIn(false);
+                props.setMyPageModal(false);
+                props.setUserData({});  // 로그인한 유저 정보 없애기
+            }
+        })
+    }
+
     return (
         <Background onClick={() => { props.setMyPageModal(false) }}>
             <ModalBox onClick={ e => e.stopPropagation() }>
                 <ProfileBox>
                     <UserProfile src={userImg}/>
-                    <UserInfo>이름 : 유저이름</UserInfo>
-                    <BtnInProfile>마이페이지</BtnInProfile>
-                    <BtnInProfile>글쓰기</BtnInProfile>
+                    <UserInfo>{props.userData.id}님 안녕하세용</UserInfo>
+                    <BtnInProfile onClick={() => { 
+                        navigate("/mypage");
+                        props.setMyPageModal(false);
+                    }}>마이페이지</BtnInProfile>
+                    <BtnInProfile onClick={() => {
+                        navigate("/write");
+                        props.setMyPageModal(false);
+                    }}>글쓰기</BtnInProfile>
                 </ProfileBox>
-                <LogoutBtn onClick={() => {
-                    props.setIsLoggedIn(false);
-                    props.setMyPageModal(false);
-                }}>로그아웃</LogoutBtn>
+                <form onSubmit={ logout }>
+                    <LogoutBtn type="submit">로그아웃</LogoutBtn>
+                </form>
             </ModalBox>
         </Background>
     );

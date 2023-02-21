@@ -9,6 +9,9 @@ import Navbar from "./components/Navbar.js";  // 왜 {} 하면 에러남?
 import MainPage from "./pages/MainPage.js";
 import PostListPage from "./pages/PostListPage.js";
 import PostDetailsPage from "./pages/PostDetailsPage.js";
+import MyPage from "./pages/MyPage.js";
+import WritePage from "./pages/WritePage.js";
+
 import ForumData from "./store/ForumData.js";
 import QnaData from "./store/QnaData.js";
 
@@ -41,10 +44,14 @@ function App() {
       <Routes>
           {/* props로 카테고리 넘겨주기 vs 데이터 자체를 넘겨주기 ????? */}
           <Route path="/" element={ < MainPage forumData={forumData} qnaData={qnaData}/> }/>
-          <Route path="/forum" element={ <PostListPage contents={forumData}/> }/>
+          <Route path="/forum" element={ <PostListPage categoryTitle="Forum" contents={forumData}/> }/>
           <Route path="/forum/:id" element={ <PostDetailsPage contents={ForumData}/> }/>
-          <Route path="/qna" element={ <PostListPage contents={qnaData}/> }/>
+          <Route path="/qna" element={ <PostListPage categoryTitle="Q&A" contents={qnaData}/> }/>
           <Route path="/qna/:id" element={ <PostDetailsPage contents={QnaData}/> }/>
+
+          {/* 로그인 이후에 접속할 수 있는 사이트 */}
+          <Route path="/mypage" element={ <MyPage/> }/>
+          <Route path="/write" element={ <WritePage/> }/>
       </Routes>
 
     </div>

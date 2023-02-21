@@ -31,21 +31,27 @@ let InputLoginData = styled.input`
     margin : 3px;
 `
 
+let CheckBox = styled.div`
+    font-size : 13px;
+    padding : 4px 10px;
+    display : flex;
+`
+
 let LoginBtn = styled.button`
     background-color : powderblue;
-    width : 270px;
+    width : 275px;
     height : 35px;
     border : 0px;
     border-radius : 5px;
     margin : 5px;
+    cursor : pointer;
 `
 
 // 회원가입, ID찾기, PW찾기
 let LoginMenu = styled.div`
     font-size : 13px;
     margin : 7px;
-    padding-left : 7px;
-    padding-right : 7px;
+    padding : 0px 7px;
     display : inline-block;
 `
 
@@ -63,6 +69,7 @@ function LoginModal(props) {
     let tryLogin = (e) => {
         e.preventDefault();
 
+        // 서버에 보낼 ID, PW
         let body = {
             id : inputId,
             pw : inputPw
@@ -73,14 +80,19 @@ function LoginModal(props) {
 
         axios.post("/login", body)
         .then(response => {
-            console.log("성공!");
+            // response.data.data :: 유저정보
+            // response.data.message :: 로그인 성공했을 때 OK 옴
             console.log(('data:' + JSON.stringify(body)));
-            console.log(response.data);
-        }).catch((res) => { 
-            console.log("에러;;;");
-            console.log("wrong data:" + JSON.stringify(body));
-            console.log('res:', res);
-
+            if (response.data.message == "OK") {
+                alert("로그인 완료!");
+                props.setIsLoggedIn(true);  // 로그인 상태일 때의 상단바로 변경
+                props.setLoginModal(false);  // 로그인 모달창 없애기
+                props.setUserData(response.data.data);  // 유저 정보 저장
+            }
+            else alert("아이디 또는 비밀번호가 틀렸습니다.");
+        }).catch((err) => { 
+            console.log("tryLogin 함수 에러");
+            console.log(err);
         });
     }
 
@@ -99,7 +111,11 @@ function LoginModal(props) {
                     type="password"
                     onChange={e => { setInputPw(e.target.value); }}
                     />
-                    <div style={{fontSize : "13px",}}>아이디 저장 / 자동 로그인 만들어야지</div>
+                    <CheckBox>
+                        <input type="checkbox" id="save-id"/><label htmlFor="save-id">아이디 저장</label>
+                        <div style={{ width : "7px" }}/>
+                        <input type="checkbox" id="save-user"/><label htmlFor="save-user">로그인 유지</label>
+                    </CheckBox>
                     <LoginBtn type="submit">로그인!</LoginBtn>
                 </form>
                 <div style={{ display : "inline-block", verticalAlign : "middle" }}>
