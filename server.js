@@ -123,6 +123,37 @@ app.post('/login', passport.authenticate('local', {failureRedirect : '/fail'}), 
 
 });
 
+app.post('/logout', function(req,res){
+    req.logout(() => {
+        req.session.destroy((function(){
+            res.cookie('connect.sid','',{maxAge:0})
+            res.json({ message: 'logout' });
+            // res.redirect('/');
+          })
+        
+        )
+    });
+    });
+// app.post('/logout', (req, res) => {
+//     if (req.session.user) {
+//         console.log('req.session.user:',req.session.user)
+//     }
+    // req.logout((err) => {
+    //     if (err) {return next(err)};
+    //     req.session.destroy();
+    //     console.log('로그아웃 완료')
+
+    //     // res.redirect('/');
+    // }); 
+    
+    // req.session.save(() => {
+    //     console.log('22 로그아웃 완료')
+    //     req.session.destroy();
+
+    //     // res.redirect('/');
+    // });
+// })
+
 
 app.get('/mypage', 로그인했니, function (요청, 응답) { 
     console.log('마이페이지의 요청.user:', 요청.user); 
