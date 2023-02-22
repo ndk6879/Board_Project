@@ -33,6 +33,12 @@ let MoreBtn = styled.button`
     background-color : powderblue;
     border : thin solid black;
     border-radius: 5px;
+    cursor : pointer;  // 마우스 가져갔을 때 손가락 모양으로
+    // 마우스 대면 효과 생기게
+    &:hover{
+        background-color: cadetblue;
+        color: white;
+    }
 `
 
 let ListOfPosts = styled.table`
@@ -59,7 +65,7 @@ let PostInfo = styled.tr`
 `
 
 let TitleInfo = styled.td`
-    padding-left : 15px;
+    padding : 8px 15px;
     width : 80%;  // 이렇게 말고,,
 `
 

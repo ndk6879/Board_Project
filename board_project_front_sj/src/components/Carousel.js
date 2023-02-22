@@ -41,6 +41,7 @@ let Btn = styled.button`
     border-radius: 5px;
     padding: 8px;
     opacity: 0.8;
+    cursor : pointer;
 
     // 마우스 대면 효과 생기게
     &:hover{

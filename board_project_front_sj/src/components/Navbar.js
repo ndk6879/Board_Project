@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { setIsLoggedIn, setUserData } from "../store.js";
+import { setLoginModal, setMyPageModal } from "../store.js";
 
 import logo from "../logo.svg";
 import LoginModal from "./LoginModal.js";
@@ -48,8 +48,10 @@ let LoginModalBtn = styled.div`
 
 function Navbar() {
 
-    let [loginModal, setLoginModal] = useState(false);
-    let [myPageModal, setMyPageModal] = useState(false);
+    // let [loginModal, setLoginModal] = useState(false);
+    // let [myPageModal, setMyPageModal] = useState(false);
+    let loginModal = useSelector(state => state.modalState.login);
+    let myPageModal = useSelector(state => state.modalState.mypage);
     let isLoggedIn = useSelector(state => state.session.isLoggedIn);
     let userData = useSelector(state => state.session.userData);
 
@@ -70,14 +72,14 @@ function Navbar() {
                     -> 이런 식으로는? div에 navigate 써도 되나 */}
                 {
                     !isLoggedIn
-                    ? <LoginModalBtn onClick={() => { setLoginModal(!loginModal) }}>Login / Sign up</LoginModalBtn>
-                    : <LoginModalBtn onClick={() => { setMyPageModal(!myPageModal)}}>My Page / Logout</LoginModalBtn>
+                    ? <LoginModalBtn onClick={() => { dispatch(setLoginModal()) }}>Login / Sign up</LoginModalBtn>
+                    : <LoginModalBtn onClick={() => { dispatch(setMyPageModal()) }}>My Page / Logout</LoginModalBtn>
                 }
                 
             </Background>
             <div style={{ position : "relative" }}>
-                { loginModal && <LoginModal setLoginModal={setLoginModal}/> }
-                { myPageModal && <MyPageModal setMyPageModal={setMyPageModal}/> }
+                { loginModal && <LoginModal/> }
+                { myPageModal && <MyPageModal/> }
             </div>
             
         </div>

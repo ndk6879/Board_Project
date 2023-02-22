@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { setIsLoggedIn, setUserData } from "../store.js";
+import { setIsLoggedIn, setUserData, setLoginModal } from "../store.js";
 
 let Background = styled.div`
     position : absolute;
@@ -57,7 +57,7 @@ let LoginMenu = styled.div`
     display : inline-block;
 `
 
-function LoginModal(props) {
+function LoginModal() {
 
     let [inputId, setInputId] = useState('');
     let [inputPw, setInputPw] = useState('');
@@ -94,7 +94,7 @@ function LoginModal(props) {
                 alert("로그인 완료!");
                 dispatch(setIsLoggedIn(true));  // 로그인 상태 변경
                 dispatch(setUserData(response.data.data));  // 유저 정보 저장
-                props.setLoginModal(false);  // 로그인 모달창 없애기
+                dispatch(setLoginModal());  // 로그인 모달창 없애기
             }
             else alert("아이디 또는 비밀번호가 틀렸습니다.");
         }).catch((err) => { 
@@ -104,7 +104,7 @@ function LoginModal(props) {
     }
 
     return (
-        <Background onClick={() => { props.setLoginModal(false) }}>
+        <Background onClick={() => { dispatch(setLoginModal(false)) }}>
             <ModalBox onClick={e => { e.stopPropagation() }}>
                 <form onSubmit={ tryLogin }>
                     <InputLoginData

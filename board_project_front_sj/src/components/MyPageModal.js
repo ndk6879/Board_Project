@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { setIsLoggedIn, setUserData } from "../store.js";
+import { setIsLoggedIn, setUserData, setMyPageModal } from "../store.js";
 
 import userImg from "../img/user.png";
 
@@ -79,7 +79,7 @@ let LogoutBtn = styled.button`
 `
 
 // 로그인 상태에서 상단바의 'My Page / Logout' 을 누르면 보여줄 모달
-function MyPageModal(props) {
+function MyPageModal() {
 
     let navigate = useNavigate();
     let dispatch = useDispatch();
@@ -97,7 +97,7 @@ function MyPageModal(props) {
                 alert("로그아웃 완료!");
                 dispatch(setIsLoggedIn(false));
                 dispatch(setUserData({ _id : '', id : '', pw : '' }));  // 로그인한 유저 정보 없애기
-                props.setMyPageModal(false);
+                dispatch(setMyPageModal());
             }
         }).catch(err => {
             console.log("로그아웃 에러");
@@ -106,7 +106,7 @@ function MyPageModal(props) {
     }
 
     return (
-        <Background onClick={() => { props.setMyPageModal(false) }}>
+        <Background onClick={() => { dispatch(setMyPageModal(false)) }}>
             <ModalBox onClick={ e => e.stopPropagation() }>
                 <ProfileBox>
                     <UserProfile src={userImg}/>
