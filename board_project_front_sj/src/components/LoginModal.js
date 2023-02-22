@@ -3,6 +3,8 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { setIsLoggedIn, setUserData } from "../store.js";
 
 let Background = styled.div`
     position : absolute;
@@ -60,6 +62,11 @@ function LoginModal(props) {
     let [inputId, setInputId] = useState('');
     let [inputPw, setInputPw] = useState('');
 
+    let dispatch = useDispatch();
+    let session = useSelector((state) => state.session);
+
+    useEffect(() => { console.log("before login:", session) }, []);
+
     /*
     입력된 데이터를 서버로 보내는 함수
     - 입력된 ID, PW가 DB의 유저 정보와 같은 경우에만 로그인 허용하기 위해
@@ -85,9 +92,9 @@ function LoginModal(props) {
             console.log(('data:' + JSON.stringify(body)));
             if (response.data.message == "OK") {
                 alert("로그인 완료!");
-                props.setIsLoggedIn(true);  // 로그인 상태일 때의 상단바로 변경
+                dispatch(setIsLoggedIn(true));  // 로그인 상태 변경
+                dispatch(setUserData(response.data.data));  // 유저 정보 저장
                 props.setLoginModal(false);  // 로그인 모달창 없애기
-                props.setUserData(response.data.data);  // 유저 정보 저장
             }
             else alert("아이디 또는 비밀번호가 틀렸습니다.");
         }).catch((err) => { 

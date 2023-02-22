@@ -5,6 +5,9 @@ import "../App.css"
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { setIsLoggedIn, setUserData } from "../store.js";
+
 import logo from "../logo.svg";
 import LoginModal from "./LoginModal.js";
 import MyPageModal from "./MyPageModal.js";
@@ -46,11 +49,12 @@ let LoginModalBtn = styled.div`
 function Navbar() {
 
     let [loginModal, setLoginModal] = useState(false);
-    let [isLoggedIn, setIsLoggedIn] = useState(false);
     let [myPageModal, setMyPageModal] = useState(false);
-    let [userData, setUserData] = useState({});  // 로그인 성공시 서버에서 받을 유저 정보
+    let isLoggedIn = useSelector(state => state.session.isLoggedIn);
+    let userData = useSelector(state => state.session.userData);
 
     let navigate = useNavigate();
+    let dispatch = useDispatch();
 
     //useEffect(() => { console.log(userData) }, [userData]);
 
@@ -72,8 +76,8 @@ function Navbar() {
                 
             </Background>
             <div style={{ position : "relative" }}>
-                { loginModal && <LoginModal setIsLoggedIn={setIsLoggedIn} setLoginModal={setLoginModal} setUserData={setUserData}/> }
-                { myPageModal && <MyPageModal setIsLoggedIn={setIsLoggedIn} setMyPageModal={setMyPageModal} userData={userData} setUserData={setUserData}/> }
+                { loginModal && <LoginModal setLoginModal={setLoginModal}/> }
+                { myPageModal && <MyPageModal setMyPageModal={setMyPageModal}/> }
             </div>
             
         </div>

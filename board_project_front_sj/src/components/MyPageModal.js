@@ -1,9 +1,11 @@
 /* eslint-disable */
 
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { setIsLoggedIn, setUserData } from "../store.js";
 
 import userImg from "../img/user.png";
 
@@ -80,6 +82,10 @@ let LogoutBtn = styled.button`
 function MyPageModal(props) {
 
     let navigate = useNavigate();
+    let dispatch = useDispatch();
+    let session = useSelector((state) => state.session);
+
+    useEffect(() => { console.log("before logout:", session) }, []);
 
     let logout = e => {
         e.preventDefault();
@@ -89,10 +95,13 @@ function MyPageModal(props) {
             console.log("from server:", response.data);
             if (response.data.message == "logout") {
                 alert("로그아웃 완료!");
-                props.setIsLoggedIn(false);
+                dispatch(setIsLoggedIn(false));
+                dispatch(setUserData({ _id : '', id : '', pw : '' }));  // 로그인한 유저 정보 없애기
                 props.setMyPageModal(false);
-                props.setUserData({});  // 로그인한 유저 정보 없애기
             }
+        }).catch(err => {
+            console.log("로그아웃 에러");
+            console.log(err);
         })
     }
 
@@ -101,7 +110,7 @@ function MyPageModal(props) {
             <ModalBox onClick={ e => e.stopPropagation() }>
                 <ProfileBox>
                     <UserProfile src={userImg}/>
-                    <UserInfo>{props.userData.id}님 안녕하세용</UserInfo>
+                    <UserInfo>{session.userData.id}님 안녕하세용</UserInfo>
                     <BtnInProfile onClick={() => { 
                         navigate("/mypage");
                         props.setMyPageModal(false);
