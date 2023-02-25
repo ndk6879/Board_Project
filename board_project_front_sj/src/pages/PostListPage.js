@@ -1,36 +1,32 @@
 /* eslint-disable */
 
 import styled from "styled-components";
-import { useState, useEffect } from "react";
-import axios from "axios";
 
-let OutsideBox = styled.div`
-    width : 95%;
-    height : 780px;
-    border : 1px solid black;
-    margin : auto;
-    margin-top : 10px;
+import PostList from "../components/PostList.js";
+import BottomItems from "../components/BottomItems.js"
+
+let ContainerBox = styled.div`
+    width : 95%;  // 나중에 px로 바꿀 것 (전체화면 기준)
+    //height : 780px;  // 없어도 될 듯
+    margin : 30px auto;
+`
+
+let Header = styled.div`
+    margin : 15px 0px;  // 세로 가로 인가봐
+    text-align : left;
+    font-size : 30px;
 `
 
 function PostListPage(props) {
 
-    let [realData, setRealData] = useState([]);
-    let pullData = () => {
-        axios.get("/list/post").then(data => {
-            let copy = [...realData];
-            copy = data.data
-            setRealData(copy);
-        }).catch(() => { console.log("게시글 데이터 가져오기 실패") });
-    }
-
-    // 페이지 mount시 1회 게시글 가져오는 기능
-    useEffect(() => { pullData(); }, [])
+    let categoryTitle = (props.category == "forum" ? "Forum" : "Q&A");
 
     return (
-        <OutsideBox>
-            <div>게시글 목록</div>
-            {realData.map((data, i) => <div key={i}>{data.title}</div> )}
-        </OutsideBox>
+        <ContainerBox>
+            <Header>{categoryTitle}</Header>
+            <PostList category={props.category}></PostList>
+            <BottomItems/>
+        </ContainerBox>
     )
 }
 

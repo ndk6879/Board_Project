@@ -4,6 +4,8 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { setForumData, setQnaData } from "./store.js";
 
 import Navbar from "./components/Navbar.js";  // 왜 {} 하면 에러남?
 import MainPage from "./pages/MainPage.js";
@@ -17,20 +19,25 @@ import QnaData from "./store/QnaData.js";
 
 function App() {
 
-  let [forumData, setForumData] = useState([]);
-  let [qnaData, setQnaData] = useState([]);
+  // let [forumData, setForumData] = useState([]);
+  // let [qnaData, setQnaData] = useState([]);
+
+  let dispatch = useDispatch();
+  let forumData = useSelector((state) => state.postData.forum);
+  let qnaData = useSelector((state) => state.postData.qna);
 
   // 서버에서 게시글 데이터 가져오기
   let pullData = () => {
+    console.log("F5");
     axios.get("/list/post/forum").then(data => {
       let copiedForumData = [...forumData];
       copiedForumData = data.data;
-      setForumData(copiedForumData);
+      dispatch(setForumData(copiedForumData));
     })
     axios.get("/list/post/qa").then(data => {
       let copiedQnaData = [...qnaData];
       copiedQnaData = data.data;
-      setQnaData(copiedQnaData);
+      dispatch(setQnaData(copiedQnaData));
     })
   }
   
@@ -43,11 +50,11 @@ function App() {
 
       <Routes>
           {/* props로 카테고리 넘겨주기 vs 데이터 자체를 넘겨주기 ????? */}
-          <Route path="/" element={ < MainPage forumData={forumData} qnaData={qnaData}/> }/>
-          <Route path="/forum" element={ <PostListPage categoryTitle="Forum" contents={forumData}/> }/>
-          <Route path="/forum/:id" element={ <PostDetailsPage contents={ForumData}/> }/>
-          <Route path="/qna" element={ <PostListPage categoryTitle="Q&A" contents={qnaData}/> }/>
-          <Route path="/qna/:id" element={ <PostDetailsPage contents={QnaData}/> }/>
+          <Route path="/" element={ < MainPage/> }/>
+          <Route path="/forum" element={ <PostListPage category="forum"/> }/>
+          <Route path="/forum/:id" element={ <PostDetailsPage contents={forumData}/> }/>
+          <Route path="/qna" element={ <PostListPage category="qna"/> }/>
+          <Route path="/qna/:id" element={ <PostDetailsPage contents={qnaData}/> }/>
 
           {/* 로그인 이후에 접속할 수 있는 사이트 */}
           <Route path="/mypage" element={ <MyPage/> }/>

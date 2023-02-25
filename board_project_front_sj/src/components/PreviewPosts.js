@@ -3,6 +3,7 @@
 import "../App.css";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 let ContainerBox = styled.div`
     width : 90vw;
@@ -86,8 +87,13 @@ let Comment = styled.div`
 `
 
 function PreviewPosts(props) {
-        
-    let copyForShowContents = [...props.contents.slice(-5, )].reverse();  { /*최근 5개, 최신순으로 */}
+
+    let categoryTitle = (props.category == "forum" ? "Forum" : "Q&A");
+    let contents = (props.category == "forum"
+                    ? useSelector((state) => state.postData.forum)
+                    : useSelector((state) => state.postData.qna));
+
+    let copyForShowContents = [...contents.slice(-5, )].reverse();  { /*최근 5개, 최신순으로 */}
     let navigate = useNavigate();
 
     return(
@@ -95,7 +101,7 @@ function PreviewPosts(props) {
         <ContainerBox>
 
             <Header>
-                <CategoryTitle>{props.categoryTitle}</CategoryTitle>
+                <CategoryTitle>{categoryTitle}</CategoryTitle>
                 <MoreBtn onClick={() => { navigate(`/${props.category}`)}}>더보기</MoreBtn>
             </Header>
             <ListOfPosts>
@@ -113,8 +119,7 @@ function PreviewPosts(props) {
                                 <PostInfo key={i}>
                                     <TitleInfo>
                                         <Title onClick={(e) => {
-                                            let content = props.contents.find((data) => data.title == e.target.innerText);
-                                            navigate(`/${props.category}/${content.id}`);
+                                            navigate(`/${props.category}/${data.id}`);
                                             {/*
                                             - e가 필요해서 Link 안 쓰고 그냥 onClick으로 해놓음
                                             - 마우스 갖다대도 손가락으로 안 바뀜..바꿀거야

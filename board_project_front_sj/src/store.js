@@ -27,13 +27,24 @@ let modalState = createSlice({
   }
 })
 
+let postData = createSlice({
+  name : "postData",
+  initialState : { forum : [], qna : [] },
+  reducers: {
+    setForumData(state, action) { state.forum = action.payload },
+    setQnaData(state, action) { state.qna = action.payload }
+  }
+})
+
 export default configureStore({
   reducer: {
     session : session.reducer,
-    modalState : modalState.reducer
+    modalState : modalState.reducer,
+    postData : postData.reducer
   }
 })
 
 
 export let { setIsLoggedIn, setUserData } = session.actions;
 export let { setLoginModal, setMyPageModal } = modalState.actions;
+export let { setForumData, setQnaData } = postData.actions;
