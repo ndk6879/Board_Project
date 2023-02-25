@@ -2,6 +2,7 @@
 
 import styled from "styled-components";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 let Table = styled.table`
@@ -22,7 +23,7 @@ let Td = styled.td`
 let TitleInfo = styled.div`
   float : left;
   margin : auto 15px;  // 제목 앞 + 제목 ~ 댓글수 간격 두기
-  //border : 1px solid indigo;
+  cursor : pointer;  // 마우스 가져갔을 때 손가락 모양으로
 
   // 제목이 긴 경우
   overflow : hidden;  // 글자 자르기
@@ -38,6 +39,8 @@ let Comment = styled.div`
 `
 
 function PostList(props) {
+
+  let navigate = useNavigate();
 
   // 카테고리에 맞게 데이터 가지고 오기
   let contents = (props.category == "forum"
@@ -65,7 +68,9 @@ function PostList(props) {
               return (
                 <tr key={i}>
                   <Td>
-                    <TitleInfo>{data.title}</TitleInfo>
+                    <TitleInfo onClick={(e) => { navigate(`/${props.category}/${data._id}`); }}>
+                      {data.title}
+                    </TitleInfo>
                     <Comment>[0]</Comment>
                   </Td>
                   <Td>{data.date}</Td>

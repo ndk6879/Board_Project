@@ -74,6 +74,7 @@ let Title = styled.div`
     text-align : left;
     float : left;
     margin-right : 10px;  // 제목 ~ 댓글수 간격 두기
+    cursor : pointer;  // 마우스 가져갔을 때 손가락 모양으로
 
     // 제목이 긴 경우
     overflow : hidden;  // 글자 자르기
@@ -120,10 +121,7 @@ function PreviewPosts(props) {
                                     <TitleInfo>
                                         <Title onClick={(e) => {
                                             navigate(`/${props.category}/${data._id}`);
-                                            {/*
-                                            - e가 필요해서 Link 안 쓰고 그냥 onClick으로 해놓음
-                                            - 마우스 갖다대도 손가락으로 안 바뀜..바꿀거야
-                                            */}
+                                            {/* e가 필요해서 Link 안 쓰고 그냥 onClick으로 해놓음 ...이게 먼말이더라 */}
                                         }}>{data.title}</Title>
                                         <Comment>[0]</Comment>
                                     </TitleInfo>
