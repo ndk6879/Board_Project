@@ -1,6 +1,8 @@
 /* eslint-disable */
 
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 import PostContent from "../components/PostContent.js";
 import Comment from "../components/Comment.js";
 import AddComment from "../components/AddComment.js";
@@ -8,19 +10,17 @@ import CommentData from "../store/CommentData.js";  // 댓글 출력 테스트
 
 function PostDetailsPage(props) {
 
+    // 카테고리에 맞게 데이터 가지고 오기
+    // 근데 여기서 가지고 오면 주소창에 /forum/00 입력해서 들어가는거 안됨
+    let contents = (props.category == "forum"
+                    ? useSelector((state) => state.postData.forum)
+                    : useSelector((state) => state.postData.qna));
+
     let {id} = useParams();
-    let post = props.contents.find((data) => data.id == id);
+    let post = contents.find((data) => data._id == id);
 
     return (
         <div>
-            <div style={{ textAlign : "left", padding : "7px", paddingLeft : "15px"}}>
-                🏠Home &gt; Forum
-            </div>
-            {/*
-            - 이거를...굳이 컴포넌트로까지..???나눠야할까
-            - Forum인지 Q&A인지도 바꿔줘야함
-            */}
-            
             <PostContent post={post}/>
             { CommentData.map((data, i) => <Comment key={i} data={data}/>)   /* 댓글 개수만큼 나오도록 */}
             <AddComment/>

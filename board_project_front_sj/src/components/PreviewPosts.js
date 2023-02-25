@@ -119,7 +119,7 @@ function PreviewPosts(props) {
                                 <PostInfo key={i}>
                                     <TitleInfo>
                                         <Title onClick={(e) => {
-                                            navigate(`/${props.category}/${data.id}`);
+                                            navigate(`/${props.category}/${data._id}`);
                                             {/*
                                             - e가 필요해서 Link 안 쓰고 그냥 onClick으로 해놓음
                                             - 마우스 갖다대도 손가락으로 안 바뀜..바꿀거야

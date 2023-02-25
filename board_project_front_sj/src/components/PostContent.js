@@ -4,7 +4,6 @@
 
 import { useState } from "react";
 import styled from "styled-components";
-import ForumData from "../store/ForumData.js";
 
 // 제목 + 글쓴이 + 날짜
 let Header = styled.div`
@@ -78,12 +77,14 @@ let CommentInfo = styled.div`
 `
 
 function PostContent({post}) {
+    
     let [like, setLike] = useState(0);
+
     return (
         <div>
             <Header>
                 <TitleInfo>{ post.title }</TitleInfo>
-                <WriterInfo>{ post.writer }</WriterInfo>
+                <WriterInfo>{ post.author }</WriterInfo>
                 <PostDate>{ post.date }</PostDate>
                 {/*
                 - 제목 길어졌을 때 높이 맘에 안 듦 :: 된 거 같기두

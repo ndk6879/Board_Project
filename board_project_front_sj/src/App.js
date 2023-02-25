@@ -52,9 +52,9 @@ function App() {
           {/* props로 카테고리 넘겨주기 vs 데이터 자체를 넘겨주기 ????? */}
           <Route path="/" element={ < MainPage/> }/>
           <Route path="/forum" element={ <PostListPage category="forum"/> }/>
-          <Route path="/forum/:id" element={ <PostDetailsPage contents={forumData}/> }/>
+          <Route path="/forum/:id" element={ <PostDetailsPage category="forum"/> }/>
           <Route path="/qna" element={ <PostListPage category="qna"/> }/>
-          <Route path="/qna/:id" element={ <PostDetailsPage contents={qnaData}/> }/>
+          <Route path="/qna/:id" element={ <PostDetailsPage category="qna"/> }/>
 
           {/* 로그인 이후에 접속할 수 있는 사이트 */}
           <Route path="/mypage" element={ <MyPage/> }/>
