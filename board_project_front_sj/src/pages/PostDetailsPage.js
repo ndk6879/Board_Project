@@ -1,5 +1,6 @@
 /* eslint-disable */
 
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -19,9 +20,12 @@ function PostDetailsPage(props) {
     let {id} = useParams();
     let post = contents.find((data) => data._id == id);
 
+    // 페이지 들어올 때, 새로고침 할 때 맨 위로 올림
+    useEffect(() => { window.scrollTo({ top : 0 })}, []);
+
     return (
         <div>
-            <PostContent post={post}/>
+            <PostContent post={post} category={props.category}/>
             { CommentData.map((data, i) => <Comment key={i} data={data}/>)   /* 댓글 개수만큼 나오도록 */}
             <AddComment/>
         </div>
