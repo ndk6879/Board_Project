@@ -87,6 +87,12 @@ function MyPageModal() {
 
     useEffect(() => { console.log("before logout:", session) }, []);
 
+    /*
+    로그아웃 함수
+    - 로그아웃 버튼을 누르면 로그아웃 상태로 변경
+    - 로그인 상태 저장하는 state를 false로
+    - 로그인한 유저 정보를 저장하는 state 비우기
+    */
     let logout = e => {
         e.preventDefault();
 
