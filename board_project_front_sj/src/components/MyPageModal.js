@@ -103,7 +103,7 @@ function MyPageModal() {
                 alert("로그아웃 완료!");
                 dispatch(setIsLoggedIn(false));
                 dispatch(setUserData({ _id : '', id : '', pw : '' }));  // 로그인한 유저 정보 없애기
-                dispatch(setMyPageModal());
+                dispatch(setMyPageModal(false));
             }
         }).catch(err => {
             console.log("로그아웃 에러");
@@ -119,11 +119,11 @@ function MyPageModal() {
                     <UserInfo>{session.userData.id}님 안녕하세용</UserInfo>
                     <BtnInProfile onClick={() => { 
                         navigate("/mypage");
-                        props.setMyPageModal(false);
+                        dispatch(setMyPageModal(false));
                     }}>마이페이지</BtnInProfile>
                     <BtnInProfile onClick={() => {
                         navigate("/write");
-                        props.setMyPageModal(false);
+                        dispatch(setMyPageModal(false));
                     }}>글쓰기</BtnInProfile>
                 </ProfileBox>
                 <form onSubmit={ logout }>

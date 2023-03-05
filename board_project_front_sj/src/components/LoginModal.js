@@ -2,6 +2,7 @@
 
 import styled from "styled-components";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { setIsLoggedIn, setUserData, setLoginModal } from "../store.js";
@@ -55,6 +56,7 @@ let LoginMenu = styled.div`
     margin : 7px;
     padding : 0px 7px;
     display : inline-block;
+    cursor : pointer;
 `
 
 function LoginModal() {
@@ -62,6 +64,7 @@ function LoginModal() {
     let [inputId, setInputId] = useState('');
     let [inputPw, setInputPw] = useState('');
 
+    let navigate = useNavigate();
     let dispatch = useDispatch();
     let session = useSelector((state) => state.session);
 
@@ -94,7 +97,7 @@ function LoginModal() {
                 alert("로그인 완료!");
                 dispatch(setIsLoggedIn(true));  // 로그인 상태 변경
                 dispatch(setUserData(response.data.data));  // 유저 정보 저장
-                dispatch(setLoginModal());  // 로그인 모달창 없애기
+                dispatch(setLoginModal(false));  // 로그인 모달창 없애기
             }
             else alert("아이디 또는 비밀번호가 틀렸습니다.");
         }).catch((err) => { 
@@ -126,7 +129,10 @@ function LoginModal() {
                     <LoginBtn type="submit">로그인!</LoginBtn>
                 </form>
                 <div style={{ display : "inline-block", verticalAlign : "middle" }}>
-                    <LoginMenu>회원가입</LoginMenu>
+                    <LoginMenu onClick={(e) => {
+                        navigate("/signup");
+                        dispatch(setLoginModal(false));
+                    }}>회원가입</LoginMenu>
                     <LoginMenu>ID찾기</LoginMenu>
                     <LoginMenu>PW찾기</LoginMenu>
                 </div>

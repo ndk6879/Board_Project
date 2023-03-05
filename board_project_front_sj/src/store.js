@@ -23,8 +23,8 @@ let modalState = createSlice({
   name : "modalState",
   initialState : { login : false, mypage : false },
   reducers : {
-    setLoginModal(state) { state.login = !(state.login) },
-    setMyPageModal(state) { state.mypage = !(state.mypage) }
+    setLoginModal(state, action) { state.login = action.payload },
+    setMyPageModal(state, action) { state.mypage = action.payload }
   }
 })
 
