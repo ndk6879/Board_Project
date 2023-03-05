@@ -9,33 +9,19 @@
 </head>
 <body>
   
-    <%- include('nav.html') %>
+  <%- include('nav.html') %>
 
-  <h4 class="container mt-4"><strong>글 작성페이지</strong></h4>
+  <h4 class="container mt-4"><strong>댓글 페이지</strong></h4>
 
-  <div class="container mt-3">
-    <form action="/add" method="POST">
-      <div class="form-group">
-        
-        <label>종류</label>
-        <div>
-          <select name="type">
-            <option value="forum" selected="selected">Forum</option>
-            <option value="qna" selected="selected">qna</option>
-          </select>
-        </div>
-        <br>
-
-        <label>제목</label>
-        <input type="text" placeholder="제목을 입력해 주세요." class="form-control" name="title">
-      </div>
-      <div class="form-group">
-        <label>내용</label>
-        <textarea class="form-control" name="content" placeholder="내용을 입력해 주세요." cols="50" rows="10"></textarea>
-      </div>
-      <button type="submit" class="btn btn-outline-secondary">Submit</button>
-    </form>
-  </div>
+  <div class="container mt-4"> 
+    <form action="/comment" method="POST"> 
+      <div class="form-group"> 
+        <label>댓글</label> 
+        <input type="text" class="form-control" name="comment"> 
+      </div> 
+      <button type="submit" class="btn btn-danger">전송</button> 
+    </form> 
+  </div> 
 
 
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
