@@ -25,22 +25,29 @@ let CategoryTitle = styled.div`
     margin-right : auto;  // 더보기 버튼 오른쪽에 붙이기
     text-align : left;  // 글 왼쪽 정렬
     font-size : 23px;
-`
-
-let MoreBtn = styled.button`
-    width : 60px;
-    height : 28px;
-    font-size : 14px;
-    background-color : powderblue;
-    border : thin solid black;
-    border-radius: 5px;
-    cursor : pointer;  // 마우스 가져갔을 때 손가락 모양으로
-    // 마우스 대면 효과 생기게
+    cursor : pointer;
+    //border : 1px solid indianred;
+    // 마우스 대면 효과 생기게 :: 밑줄 효과 넣자
     &:hover{
-        background-color: cadetblue;
-        color: white;
+        font-weight : 600;
+        text-decoration : underline;
     }
 `
+
+// let MoreBtn = styled.button`
+//     width : 60px;
+//     height : 28px;
+//     font-size : 14px;
+//     background-color : powderblue;
+//     border : thin solid black;
+//     border-radius: 5px;
+//     cursor : pointer;  // 마우스 가져갔을 때 손가락 모양으로
+//     // 마우스 대면 효과 생기게
+//     &:hover{
+//         background-color: cadetblue;
+//         color: white;
+//     }
+// `
 
 let ListOfPosts = styled.table`
     width : 100%;
@@ -81,6 +88,10 @@ let Title = styled.div`
     white-space : nowrap;  // 줄바꿈 방지
     text-overflow : ellipsis;  // 말줄임표(...) 표시
     max-width : 260px;  // 최대 길이 지정 :: %로 하고싶음.. +) 얘 없어도 잘 되던데 난 안 됨 ㅠ
+
+    &:hover{
+        text-decoration : underline;
+    }
 `
 
 let Comment = styled.div`
@@ -102,17 +113,12 @@ function PreviewPosts(props) {
         <ContainerBox>
 
             <Header>
-                <CategoryTitle>{categoryTitle}</CategoryTitle>
-                <MoreBtn onClick={() => { navigate(`/${props.category}`)}}>더보기</MoreBtn>
+                <CategoryTitle
+                 onClick={() => { navigate(`/${props.category}`)}}>
+                    {categoryTitle}
+                </CategoryTitle>
             </Header>
             <ListOfPosts>
-                {/* <thead>
-                    <ColumnTitle>
-                        <th style={{ width : "60%" }}>글제목</th>
-                        <th>조회수</th>
-                        <th>작성일</th>
-                    </ColumnTitle>
-                </thead> */}
                 <tbody>
                     {
                         copyForShowContents.map((data, i) => {

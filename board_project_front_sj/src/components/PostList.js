@@ -30,6 +30,11 @@ let TitleInfo = styled.div`
   white-space : nowrap;  // 줄바꿈 방지
   text-overflow : ellipsis;  // 말줄임표(...) 표시
   max-width : 260px;  // 최대 길이 지정 :: %로 하고싶음.. +) 얘 없어도 잘 되던데 난 안 됨 ㅠ
+
+  &:hover{
+    text-decoration : underline;
+    //text-underline-position : under;  // 얘 안 먹힌다 ㅠ
+  }
 `
 
 let Comment = styled.div`
