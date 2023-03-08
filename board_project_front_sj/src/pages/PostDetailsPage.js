@@ -27,7 +27,7 @@ function PostDetailsPage(props) {
         <div>
             <PostContent post={post} category={props.category}/>
             { CommentData.map((data, i) => <Comment key={i} data={data}/>)   /* 댓글 개수만큼 나오도록 */}
-            <AddComment/>
+            <AddComment id={id}/>
         </div>
     );
 }
