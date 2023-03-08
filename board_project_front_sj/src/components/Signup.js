@@ -154,7 +154,7 @@ function Signup() {
         if (!inputPw || !reInputPw) setCheckPw('');
         else if (inputPw != reInputPw) setCheckPw("다름");
         else setCheckPw("같음!");
-    }, [reInputPw]);
+    }, [inputPw, reInputPw]);
 
     // 눈 모양 아이콘 누르면 2초동안 입력한 비밀번호 보여줌
     let [hidePw1, setHidePw1] = useState(true);
