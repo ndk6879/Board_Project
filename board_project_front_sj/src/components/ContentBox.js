@@ -69,7 +69,7 @@ function ContentBox() {
     if (!isLoggedIn) {
       alert("로그인 안 하셨는데요?");
       navigate("/");
-      dispatch(setLoginModal());
+      dispatch(setLoginModal(true));
       window.scrollTo({ top: 0, behavior : "smooth" });
     }
   }, [])

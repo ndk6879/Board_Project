@@ -11,6 +11,7 @@ import Navbar from "./components/Navbar.js";  // 왜 {} 하면 에러남?
 import MainPage from "./pages/MainPage.js";
 import PostListPage from "./pages/PostListPage.js";
 import PostDetailsPage from "./pages/PostDetailsPage.js";
+import SignupPage from "./pages/SignupPage.js";
 import MyPage from "./pages/MyPage.js";
 import WritePage from "./pages/WritePage.js";
 
@@ -34,7 +35,7 @@ function App() {
       copiedForumData = data.data;
       dispatch(setForumData(copiedForumData));
     })
-    axios.get("/list/post/qa").then(data => {
+    axios.get("/list/post/qna").then(data => {
       let copiedQnaData = [...qnaData];
       copiedQnaData = data.data;
       dispatch(setQnaData(copiedQnaData));
@@ -55,6 +56,7 @@ function App() {
           <Route path="/forum/:id" element={ <PostDetailsPage category="forum"/> }/>
           <Route path="/qna" element={ <PostListPage category="qna"/> }/>
           <Route path="/qna/:id" element={ <PostDetailsPage category="qna"/> }/>
+          <Route path="/signup" element={ <SignupPage/>}/>
 
           {/* 로그인 이후에 접속할 수 있는 사이트 */}
           <Route path="/mypage" element={ <MyPage/> }/>
