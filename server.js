@@ -130,14 +130,17 @@ app.post('/comment', (req,res) => {
         var comment_info = {
             _id : id,
             author : req.user.id, 
-            // post : 게시글의_id to know 몇번째 id, 
+            post : req.body.post, 
             comment : req.body.comment, 
             time : dateString, 
             like : 0
         }
         db.collection('comment').insertOne( comment_info, (에러, 결과) => {
             if(에러){return console.log(에러)}
-            else {res.send('댓글추가 완료'); }
+            else {
+                console.log('댓글 추가 완료 from backend')
+                res.send('댓글추가 완료'); 
+            }
         })
     })
 })
