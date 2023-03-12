@@ -54,7 +54,9 @@ app.use(session({secret : '비밀코드', resave : true, saveUninitialized: fals
 app.use(passport.initialize());
 app.use(passport.session()); 
 
-
+app.post('/test', (req, res) => {
+    res.status(200).send({'message' : '없쪄!'})
+})
 
 app.get('/list/post', (req, res) => {
     db.collection('post').find().toArray( (에러, 결과) => {
@@ -94,11 +96,11 @@ app.get('/', function(요청, 응답) {
 });
 
 
-app.post('/signup', (요청,응답) => {
-    db.collection('user').insertOne({id : 요청.body.id , pw : 요청.body.pw}, (에러, 결과) => {
-        console.log('회원가입 완료!');
+app.post('/signup', (req, res) => {
+    db.collection('user').insertOne({id : req.body.id , pw : req.body.pw}, (err, res) => {
+        console.log('회원가입 성공')
     })
-    응답.send('회원가입 완료!');
+    res.status(201).send({'message' : 'OK'})
 })
 
 
@@ -139,7 +141,7 @@ app.post('/comment', (req,res) => {
             if(에러){return console.log(에러)}
             else {
                 console.log('댓글 추가 완료 from backend')
-                res.send('댓글추가 완료'); 
+                res.status(201).send({'message': 'OK'}); 
             }
         })
     })
@@ -194,7 +196,7 @@ function getPost() {
     });
 }
 
-app.post('/add', (req,res) => {
+app.post('/post', (req,res) => {
     db.collection('counter').findOne({name : '게시물갯수'}, function(에러, 결과){
         var today = new Date();
         var year = today.getFullYear();
@@ -221,7 +223,7 @@ app.post('/add', (req,res) => {
             }
             db.collection('post').insertOne( post_info, (에러, 결과) => {
                 if(에러){return console.log(에러)}
-                else {res.send('게시글 생성완료'); }
+                else {res.status.send({'message':'OK'}); }
             })
         })
 
@@ -242,12 +244,12 @@ app.get('/post', (req, res) => {
     });
 })
 
-function 로그인했니(요청, 응답, next) { 
-if (요청.user) { 
+function 로그인했니(req, res, next) { 
+if (req.user) { 
     next() 
 } 
 else { 
-    응답.send('로그인안하셨는데요?') 
+    res.status(403).send({'message':'NO'}) 
 } 
 } 
 

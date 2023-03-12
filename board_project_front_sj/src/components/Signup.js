@@ -198,8 +198,8 @@ function Signup() {
             // 회원가입 완료!가 오는듯 근데 왜 response.data.message가 아니지
             axios.post("/signup", body)
             .then(response => {
-                console.log("data:", response.data);
-                if (response.data == "회원가입 완료!") {
+                console.log("response.data:", response.data);
+                if (response.data.message == "OK") {
                     alert("회원가입 성공~");
                     navigate("/");
                 }
