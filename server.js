@@ -226,15 +226,16 @@ app.post('/post', (req,res) => {
                 else {res.status.send({'message':'OK'}); }
             })
         })
-
-        
-        
-
-
-
     })
 })
 
+app.get('/post/:id', (req, res) => {
+    db.collection('post').findOne( { _id : parseInt(req.params.id)}, (err, result) => {
+        res.send({
+            'data':result,
+        })
+    } )
+})
 
 
 app.get('/post', (req, res) => {
@@ -276,7 +277,7 @@ passport.use(new LocalStrategy({
             
         return done(null, 결과)
         } else {
-        return done(null, false, { message: '비번틀렸어요' })
+        return done(null, false, { message: 'ㄹ비번틀렸어요' })
         }
     })
     }));
