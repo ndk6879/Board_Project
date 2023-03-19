@@ -237,6 +237,13 @@ app.get('/post/:id', (req, res) => {
     } )
 })
 
+app.get('/comment/:id', (req, res) => {
+    db.collection('comment').findOne( { _id : parseInt(req.params.id)}, (err, result) => {
+        res.send({
+            'data':result,
+        })
+    } )
+})
 
 app.get('/post', (req, res) => {
     db.collection('post').find().toArray( (에러, 결과) => {
