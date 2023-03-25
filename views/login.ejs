@@ -64,6 +64,15 @@
   </div> 
 
 
+  <div class="container mt-4"> 
+    <button type="submit" class="edit btn btn-danger">수정 테스트</button> 
+  </div>
+
+  <div class="container mt-4"> 
+    <button type="submit" class="delete btn btn-danger">삭제 테스트</button> 
+  </div>
+
+
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> 
   <!--
     AJAX요청을 호출
@@ -86,6 +95,40 @@
 
     })
     
+  </script>
+  <script>
+      $('.edit').click(() => {
+        $.ajax({
+        method : 'PUT',
+        url : '/post/78', //수정할 게시글 id로 넣어주기 
+        data : { 
+          title : '수정 테스트1', //새로 수정된 제목 넣어주기
+          content : '수정 테스트1 입니다', //새로 수정된 내용 넣어주기
+          id : '78', //수정할 게시글 id로 넣어주기 
+          }
+        }).done((res) => {
+          console.log('수정 성공:', res)
+        }).fail((res) => {
+          console.log('실패:', res)
+        })
+
+      })
+  </script>
+
+  <script>
+    $('.delete').click(() => {
+      $.ajax({
+      method : 'DELETE',
+      url : '/post/삭제할 id', //수진이가 게시글 id 넣어주기 
+      data : '삭제할 게시글 id' //수진이가 게시글 id 넣어주기 
+
+    }).done((res) => {
+        console.log('삭제 성공:', res)
+      }).fail((res) => {
+        console.log('실패:', res)
+      })
+
+    })
   </script>
 </body>
 </html>
