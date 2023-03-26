@@ -86,23 +86,6 @@ app.delete('/post/:id', (req, res) => {
         );
 }); 
 
-app.get('/list/post', (req, res) => {
-    db.collection('post').find().toArray( (에러, 결과) => {
-        res.json(결과)
-    });
-})
-
-app.get('/list/post/forum', (req, res) => {
-    db.collection('post').find({ type : 'forum'}).toArray( (에러, 결과) => {
-        res.json(결과)
-    });
-})
-
-app.get('/list/post/qna', (req, res) => {
-    db.collection('post').find({ type : 'qna'}).toArray( (에러, 결과) => {
-        res.json(결과)
-    });
-})
 
 app.get('/list/user', (req, res) => {
     db.collection('user').find().toArray( (에러, 결과) => {
@@ -242,6 +225,7 @@ app.post('/post', (req,res) => {
         var post_info = {
             _id: data + 1, 
             author : req.user.id, 
+            authorID : req.user._id, 
             date : dateString, 
             title : req.body.title, 
             content : req.body.content, 
@@ -256,27 +240,45 @@ app.post('/post', (req,res) => {
     
 })
 
-app.get('/post/:id', (req, res) => {
-    db.collection('post').findOne( { _id : parseInt(req.params.id)}, (err, result) => {
-        res.send({
-            'data':result,
-        })
-    } )
-})
 
-app.get('/comment/:id', (req, res) => {
-    db.collection('comment').findOne( { _id : parseInt(req.params.id)}, (err, result) => {
-        res.send({
-            'data':result,
-        })
-    } )
-})
-
-app.get('/post', (req, res) => {
-    db.collection('post').find().toArray( (에러, 결과) => {
-        console.log('결과:',결과);
-        res.render('post.ejs', {결과: 결과})
+app.get('/forum', (req, res) => {
+    db.collection('post').find({type : 'forum'}).toArray( (에러, 결과) => {
+        res.json({data: 결과})
     });
+})
+
+app.get('/forum/:id', (req, res) => {
+    db.collection('post').findOne( { _id : parseInt(req.params.id), type : 'forum'}, (err, result) => {
+        res.json({
+            'data':result,
+        })
+    } )
+})
+
+app.get('/qna', (req, res) => {
+    db.collection('post').find({type : 'qna'}).toArray( (에러, 결과) => {
+        res.json({data: 결과})
+    });
+})
+
+app.get('/qna/:id', (req, res) => {
+    db.collection('post').findOne( { _id : parseInt(req.params.id), type : 'qna'}, (err, result) => {
+        res.json({
+            'data':result,
+        })
+    } )
+})
+
+app.get('/posts/:postID/comments', (req, res) => {
+    db.collection('comment').find({ post : req.params.postID }).toArray((err, result) => {
+        res.json({ 'comments' : result })
+    })
+})
+
+app.get('/posts/:postID/comments/:commentID', (req, res) => {
+    db.collection('comment').findOne({ post : req.params.postID, _id : parseInt(req.params.commentID) }, (err, result) => {
+        res.json({ 'comments' : result })
+    })
 })
 
 function 로그인했니(req, res, next) { 
