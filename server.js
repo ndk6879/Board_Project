@@ -58,23 +58,34 @@ app.post('/test', (req, res) => {
     res.status(200).send({'message' : '없쪄!'})
 })
 
-app.get('/list/post', (req, res) => {
-    db.collection('post').find().toArray( (에러, 결과) => {
-        res.json(결과)
-    });
-})
+app.put('/post/:id', (req, res) => {
+    db.collection('post').updateOne( 
+        {_id : parseInt(req.params.id)}, 
+        {$set : { title : req.body.title, content : req.body.content }}, 
+        (err, result) => {
+            console.log('req.body.title:',req.body.title)
+            console.log('req.body.content:',req.body.content)
+            console.log('req.body.id:',req.body.id)
+            // console.log('result:',result)
+            res.status(202).send({'message' : 'OK'})
+        }
+        );
+  });
 
-app.get('/list/post/forum', (req, res) => {
-    db.collection('post').find({ type : 'forum'}).toArray( (에러, 결과) => {
-        res.json(결과)
-    });
-})
+app.delete('/post/:id', (req, res) => {
+    req.body._id =  parseInt(req.params.id)
+    db.collection('post').deleteOne( 
+        {_id : parseInt(req.params.id)}, 
+        (err, result) => {
+            console.log('req.body.title:',req.body.title)
+            console.log('req.body.content:',req.body.content)
+            console.log('req.body.id:',req.body.id)
+            // console.log('result:',result)
+            res.status(204).send({'message' : 'OK', 'res' : result})
+        }
+        );
+}); 
 
-app.get('/list/post/qna', (req, res) => {
-    db.collection('post').find({ type : 'qna'}).toArray( (에러, 결과) => {
-        res.json(결과)
-    });
-})
 
 app.get('/list/user', (req, res) => {
     db.collection('user').find().toArray( (에러, 결과) => {
@@ -197,68 +208,86 @@ function getPost() {
 }
 
 app.post('/post', (req,res) => {
-    db.collection('counter').findOne({name : '게시물갯수'}, function(에러, 결과){
-        var today = new Date();
-        var year = today.getFullYear();
-        var month = ('0' + (today.getMonth() + 1)).slice(-2);
-        var day = ('0' + today.getDate()).slice(-2);
-        var dateString = year + '/' + month  + '/' + day;
 
-        var hours = ('0' + today.getHours()).slice(-2); 
-        var minutes = ('0' + today.getMinutes()).slice(-2);
-        var seconds = ('0' + today.getSeconds()).slice(-2); 
+    var today = new Date();
+    var year = today.getFullYear();
+    var month = ('0' + (today.getMonth() + 1)).slice(-2);
+    var day = ('0' + today.getDate()).slice(-2);
+    var dateString = year + '/' + month  + '/' + day;
+    var hours = ('0' + today.getHours()).slice(-2); 
+    var minutes = ('0' + today.getMinutes()).slice(-2);
+    var seconds = ('0' + today.getSeconds()).slice(-2); 
+    var timeString = hours + ':' + minutes  + ':' + seconds; //포맷 = 15:47:29
 
-        var timeString = hours + ':' + minutes  + ':' + seconds; //포맷 = 15:47:29
+    getPost().then(function(data) { 
+        console.log('data:',data)
 
-        getPost().then(function(data) { 
-            console.log('data:',data)
-            var post_info = {
-                _id: data + 1, 
-                author : req.user.id, 
-                date : dateString, 
-                title : req.body.title, 
-                content : req.body.content, 
-                type : req.body.type, 
-                like : 0
-            }
-            db.collection('post').insertOne( post_info, (에러, 결과) => {
-                if(에러){return console.log(에러)}
-                else {res.status.send({'message':'OK'}); }
-            })
+        var post_info = {
+            _id: data + 1, 
+            author : req.user.id, 
+            authorID : req.user._id, 
+            date : dateString, 
+            title : req.body.title, 
+            content : req.body.content, 
+            type : req.body.type, 
+            like : 0
+        }
+
+        db.collection('post').insertOne( post_info, (에러, 결과) => {
+            res.status(201).send({'message':'OK'});
         })
     })
+    
 })
 
-app.get('/post/:id', (req, res) => {
-    db.collection('post').findOne( { _id : parseInt(req.params.id)}, (err, result) => {
-        res.send({
-            'data':result,
-        })
-    } )
-})
 
-app.get('/comment/:id', (req, res) => {
-    db.collection('comment').findOne( { _id : parseInt(req.params.id)}, (err, result) => {
-        res.send({
-            'data':result,
-        })
-    } )
-})
-
-app.get('/post', (req, res) => {
-    db.collection('post').find().toArray( (에러, 결과) => {
-        console.log('결과:',결과);
-        res.render('post.ejs', {결과: 결과})
+app.get('/forum', (req, res) => {
+    db.collection('post').find({type : 'forum'}).toArray( (에러, 결과) => {
+        res.json({data: 결과})
     });
 })
 
+app.get('/forum/:id', (req, res) => {
+    db.collection('post').findOne( { _id : parseInt(req.params.id), type : 'forum'}, (err, result) => {
+        res.json({
+            'data':result,
+        })
+    } )
+})
+
+app.get('/qna', (req, res) => {
+    db.collection('post').find({type : 'qna'}).toArray( (에러, 결과) => {
+        res.json({data: 결과})
+    });
+})
+
+app.get('/qna/:id', (req, res) => {
+    db.collection('post').findOne( { _id : parseInt(req.params.id), type : 'qna'}, (err, result) => {
+        res.json({
+            'data':result,
+        })
+    } )
+})
+
+app.get('/posts/:postID/comments', (req, res) => {
+    db.collection('comment').find({ post : req.params.postID }).toArray((err, result) => {
+        res.json({ 'comments' : result })
+    })
+})
+
+app.get('/posts/:postID/comments/:commentID', (req, res) => {
+    db.collection('comment').findOne({ post : req.params.postID, _id : parseInt(req.params.commentID) }, (err, result) => {
+        res.json({ 'comments' : result })
+    })
+})
+
 function 로그인했니(req, res, next) { 
-if (req.user) { 
-    next() 
-} 
-else { 
-    res.status(403).send({'message':'NO'}) 
-} 
+    if (req.user) { 
+        next() 
+    } 
+    else { 
+        res.status(403).send({'message':'NO'}) 
+    }
 } 
 
 /*
