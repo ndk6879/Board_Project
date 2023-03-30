@@ -122,6 +122,7 @@ let ListBtn = styled(Btn)`
 // 게시글 데이터 get 요청을 여기서 하는 걸로 바꿀지 고민중, 일단 props 처리
 function PostContent(props) {
     let navigate = useNavigate();
+    let {category, id} = useParams();
 
     let [like, setLike] = useState(0);
     let [showBtn, setShowBtn] = useState(false);
@@ -132,13 +133,13 @@ function PostContent(props) {
     let deletePost = () => {
         if (window.confirm("삭제?")) {
             console.log("삭제해야겠다");
-            axios.delete(`/post/${props.id}`)
+            axios.delete(`/post/${id}`)
             .then(response => {
                 console.log(response);
                 // response.data.message :: 게시글 삭제 성공했을 때 OK 옴
                 if (response.data.message == "OK") {
                     alert("게시글 삭제가 완료되었습니다.");
-                    navigate(`/${props.category}`);
+                    navigate(`/${category}`);
                 }
             }).catch(err => {
                 console.log("deletePost 함수 에러");
@@ -176,12 +177,12 @@ function PostContent(props) {
                 </LikeAndCommentBox>
             </ContentBox>
             <BtnBox>
-                <ListBtn onClick={() => navigate(`/${props.category}`)}>
+                <ListBtn onClick={() => navigate(`/${category}`)}>
                 목록
                 </ListBtn>
                 {showBtn &&
                 <Btn
-                onClick={() => navigate(`/${props.post.type}/${props.post._id}/modify`)}
+                onClick={() => navigate(`/${category}/${id}/modify`)}
                 style={{ marginRight : "7px" }}
                 >수정</Btn>}
                 {showBtn && <Btn onClick={ deletePost }>삭제</Btn>}
