@@ -119,8 +119,10 @@
     $('.delete').click(() => {
       $.ajax({
       method : 'DELETE',
-      url : '/post/삭제할 id', //수진이가 게시글 id 넣어주기 
-      data : '삭제할 게시글 id' //수진이가 게시글 id 넣어주기 
+      url : '/post/79', //수진이가 게시글 id 넣어주기 
+      // data : {title : 'test 1',
+      //   content : 'test 1',
+      // id : 'test 1'} //수진이가 게시글 id 넣어주기 
 
     }).done((res) => {
         console.log('삭제 성공:', res)

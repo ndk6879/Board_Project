@@ -77,15 +77,11 @@ app.delete('/post/:id', (req, res) => {
     db.collection('post').deleteOne( 
         {_id : parseInt(req.params.id)}, 
         (err, result) => {
-            console.log('req.body.title:',req.body.title)
-            console.log('req.body.content:',req.body.content)
-            console.log('req.body.id:',req.body.id)
-            // console.log('result:',result)
-            res.status(204).send({'message' : 'OK', 'res' : result})
+            console.log('result:',result)
         }
         );
+    res.status(200).send({'message' : 'OK'})
 }); 
-
 
 app.get('/list/user', (req, res) => {
     db.collection('user').find().toArray( (에러, 결과) => {
@@ -144,6 +140,7 @@ app.post('/comment', (req,res) => {
             _id : id,
             author : req.user.id, 
             post : req.body.post, 
+            type : req.body.type,
             comment : req.body.comment, 
             time : dateString, 
             like : 0
@@ -223,7 +220,7 @@ app.post('/post', (req,res) => {
         console.log('data:',data)
 
         var post_info = {
-            _id: data + 1, 
+            _id: 89, 
             author : req.user.id, 
             authorID : req.user._id, 
             date : dateString, 
@@ -281,6 +278,16 @@ app.get('/posts/:postID/comments/:commentID', (req, res) => {
     })
 })
 
+
+app.get('/forum/:forum-ID/comments', (req, res) => {
+    db.collection('comment').find({ post : req.params.postID }).toArray((err, result) => {
+        res.json({ 'comments' : result })
+    })
+})
+
+// 해당하는 게시글의 댓글 찾는법
+// 1. comment 컬렉션에서 postID를 찾는다. 
+// 2. 문제점: 얘가 
 function 로그인했니(req, res, next) { 
     if (req.user) { 
         next() 
