@@ -8,19 +8,26 @@ import { setLoginModal } from "../store.js";
 
 let AddCommentBox = styled.div`
     width : 90%;
-    //height : fit-content;  // 등록 버튼도 안에 있는거 아님?
-    height : 130px;
+    height : fit-content;  // 등록 버튼도 안에 있는거 아님?
     border : 1px solid darkgray;
-    border-radius : 10px;
+    border-radius : 7px;
     margin : auto;
-    margin-top : 15px;
+    margin-bottom : 30px;
     position : relative;
 `
 
-let InputCommentData = styled.input`
+let InputCommentData = styled.textarea`
     width : 95%;
     height : 70px;
-    margin : 8px;
+    margin-top : 10px;
+    margin-bottom : 3px;
+    font-size : 14px;
+    resize : vertical;
+`
+
+let BtnBox = styled.div`
+    height : 30px;
+    margin-bottom : 7px;
 `
 
 let AddCommentBtn = styled.button`
@@ -31,7 +38,7 @@ let AddCommentBtn = styled.button`
     border-radius : 5px;
     float : right;
     //margin : 3px;
-    margin-right : 15px;
+    margin-right : 12px;
     cursor : pointer;
     &:hover{
         background-color : cadetblue;
@@ -86,7 +93,9 @@ function AddComment(props) {
                 placeholder = "댓글을 입력하세용"
                 onChange={e => { setComment(e.target.value); }}
                 />
-                <AddCommentBtn type="submit">등록</AddCommentBtn>
+                <BtnBox>
+                    <AddCommentBtn type="submit">등록</AddCommentBtn>
+                </BtnBox>
             </AddCommentBox>
         </form>
     );

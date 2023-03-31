@@ -72,8 +72,8 @@ function Navbar() {
                     -> 이런 식으로는? div에 navigate 써도 되나 */}
                 {
                     !isLoggedIn
-                    ? <LoginModalBtn onClick={() => { dispatch(setLoginModal(true)) }}>Login / Sign up</LoginModalBtn>
-                    : <LoginModalBtn onClick={() => { dispatch(setMyPageModal(true)) }}>My Page / Logout</LoginModalBtn>
+                    ? <LoginModalBtn onClick={() => { dispatch(setLoginModal(!loginModal)) }}>Login / Sign up</LoginModalBtn>
+                    : <LoginModalBtn onClick={() => { dispatch(setMyPageModal(!myPageModal)) }}>My Page / Logout</LoginModalBtn>
                 }
                 
             </Background>

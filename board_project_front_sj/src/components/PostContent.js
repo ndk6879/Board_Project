@@ -2,8 +2,11 @@
 
 /* eslint-disable */
 
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import axios from 'axios';
+
 import styled from "styled-components";
 
 // 제목 + 추가정보
@@ -116,11 +119,43 @@ let ListBtn = styled(Btn)`
   }
 `
 
+// 게시글 데이터 get 요청을 여기서 하는 걸로 바꿀지 고민중, 일단 props 처리
 function PostContent(props) {
-    
     let navigate = useNavigate();
+    let {category, id} = useParams();
 
     let [like, setLike] = useState(0);
+    let [showBtn, setShowBtn] = useState(false);
+    let session = useSelector((state) => state.session);
+
+    // 게시글 삭제 요청 함수
+    // confirm 창을 띄워서 '예'를 누를 경우 삭제함
+    let deletePost = () => {
+        if (window.confirm("삭제?")) {
+            console.log("삭제해야겠다");
+            axios.delete(`/post/${id}`)
+            .then(response => {
+                console.log(response);
+                // response.data.message :: 게시글 삭제 성공했을 때 OK 옴
+                if (response.data.message == "OK") {
+                    alert("게시글 삭제가 완료되었습니다.");
+                    navigate(`/${category}`);
+                }
+            }).catch(err => {
+                console.log("deletePost 함수 에러");
+                console.log(err);
+            });
+        }
+        else console.log("삭제안할래");
+    }
+
+    // 로그인한 유저가 쓴 게시글에서만 수정, 삭제 버튼을 보이기 위한 기능
+    // 유저 정보 확인 -> showBtn 값 바꿔줌
+    // id로 비교 -> _id로 비교하는 것으로 바꿔야 함
+    useEffect(() => {
+        if (session.userData.id == props.post.author) setShowBtn(true);
+        else setShowBtn(false);
+    })
 
     return (
         <div>
@@ -142,12 +177,15 @@ function PostContent(props) {
                 </LikeAndCommentBox>
             </ContentBox>
             <BtnBox>
-                <ListBtn onClick={() => navigate(`/${props.category}`)}>
+                <ListBtn onClick={() => navigate(`/${category}`)}>
                 목록
                 </ListBtn>
-                {/* 수정/삭제 버튼 내가 쓴 글에서만 보이게 바꿀 예정 */}
-                <Btn style={{ marginRight : "7px" }}>수정</Btn>
-                <Btn>삭제</Btn>
+                {showBtn &&
+                <Btn
+                onClick={() => navigate(`/${category}/${id}/modify`)}
+                style={{ marginRight : "7px" }}
+                >수정</Btn>}
+                {showBtn && <Btn onClick={ deletePost }>삭제</Btn>}
             </BtnBox>
         </div>
     );

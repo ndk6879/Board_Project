@@ -14,6 +14,7 @@ import PostDetailsPage from "./pages/PostDetailsPage.js";
 import SignupPage from "./pages/SignupPage.js";
 import MyPage from "./pages/MyPage.js";
 import WritePage from "./pages/WritePage.js";
+import ModifyPage from "./pages/ModifyPage.js";
 
 import ForumData from "./store/ForumData.js";
 import QnaData from "./store/QnaData.js";
@@ -30,14 +31,14 @@ function App() {
   // 서버에서 게시글 데이터 가져오기
   let pullData = () => {
     console.log("F5");
-    axios.get("/list/post/forum").then(data => {
+    axios.get("/forum").then(data => {
       let copiedForumData = [...forumData];
-      copiedForumData = data.data;
+      copiedForumData = data.data.data;
       dispatch(setForumData(copiedForumData));
     })
-    axios.get("/list/post/qna").then(data => {
+    axios.get("/qna").then(data => {
       let copiedQnaData = [...qnaData];
-      copiedQnaData = data.data;
+      copiedQnaData = data.data.data;
       dispatch(setQnaData(copiedQnaData));
     })
   }
@@ -53,9 +54,9 @@ function App() {
           {/* props로 카테고리 넘겨주기 vs 데이터 자체를 넘겨주기 ????? */}
           <Route path="/" element={ < MainPage/> }/>
           <Route path="/forum" element={ <PostListPage category="forum"/> }/>
-          <Route path="/forum/:id" element={ <PostDetailsPage category="forum"/> }/>
+          <Route path="/:category/:id" element={ <PostDetailsPage/> }/>
           <Route path="/qna" element={ <PostListPage category="qna"/> }/>
-          <Route path="/qna/:id" element={ <PostDetailsPage category="qna"/> }/>
+          <Route path="/:category/:id" element={ <PostDetailsPage/> }/>
           <Route path="/signup" element={ <SignupPage/>}/>
 
           {/* 로그인 이후에 접속할 수 있는 사이트 */}

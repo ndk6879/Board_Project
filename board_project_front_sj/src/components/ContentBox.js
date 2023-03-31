@@ -89,11 +89,15 @@ function ContentBox() {
     else if (!inputContent) alert("내용을 입력하세요.");
     else {
       console.log(body);
-      axios.post("/add", body)
+      axios.post("/post", body)
       .then(response => {
         console.log(response);
-        alert("게시글 작성이 완료되었습니다.")
-        navigate("/");
+        // response.data.message :: 게시글 작성 성공했을 때 OK 옴
+        if (response.data.message == "OK") {
+          alert("게시글 작성이 완료되었습니다.");
+          navigate("/");
+        }
+        else alert("게시글 작성 실패");
       }).catch(err => {
         console.log("createNewPost 함수 에러");
         console.log(err);
