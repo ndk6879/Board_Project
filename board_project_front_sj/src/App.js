@@ -62,6 +62,7 @@ function App() {
           {/* 로그인 이후에 접속할 수 있는 사이트 */}
           <Route path="/mypage" element={ <MyPage/> }/>
           <Route path="/write" element={ <WritePage/> }/>
+          <Route path="/:category/:id/modify" element={ <ModifyPage/> }/>
       </Routes>
 
     </div>
