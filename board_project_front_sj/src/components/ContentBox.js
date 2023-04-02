@@ -107,7 +107,7 @@ function ContentBox() {
 
   return (
     <OutsideBox>
-      <form onSubmit={ createNewPost } action="/add" method="POST">
+      <form onSubmit={ createNewPost } action="/post" method="POST">
         <ContentHeader>
           <Select
           required defaultValue="default"
