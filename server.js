@@ -124,20 +124,21 @@ function getComment() {
     });
 }
 
-app.post('/comment', (req,res) => {
-    var today = new Date();
-    var year = today.getFullYear();
-    var month = ('0' + (today.getMonth() + 1)).slice(-2);
-    var day = ('0' + today.getDate()).slice(-2);
-    var hours = ('0' + today.getHours()).slice(-2); 
-    var minutes = ('0' + today.getMinutes()).slice(-2);
-    var dateString = year + '.' + month  + '.' + day + '.' + hours  + '.' + minutes;
+app.post('/comment', (req,response) => {
 
-    var id;
-    getComment().then(function(data) { 
-        id = data + 1;
+    db.collection('commentCounter').findOne({name : '댓글갯수'}, function(err, res){
+        var 총댓글갯수 = res.totalComment;
+
+        var today = new Date();
+        var year = today.getFullYear();
+        var month = ('0' + (today.getMonth() + 1)).slice(-2);
+        var day = ('0' + today.getDate()).slice(-2);
+        var hours = ('0' + today.getHours()).slice(-2); 
+        var minutes = ('0' + today.getMinutes()).slice(-2);
+        var dateString = year + '.' + month  + '.' + day + '.' + hours  + '.' + minutes;
+        
         var comment_info = {
-            _id : id,
+            _id : 총댓글갯수+1,
             author : req.user.id, 
             post : req.body.post, 
             type : req.body.type,
@@ -145,14 +146,22 @@ app.post('/comment', (req,res) => {
             time : dateString, 
             like : 0
         }
-        db.collection('comment').insertOne( comment_info, (에러, 결과) => {
-            if(에러){return console.log(에러)}
-            else {
-                console.log('댓글 추가 완료 from backend')
-                res.status(201).send({'message': 'OK'}); 
+
+        db.collection('post').updateOne(
+            {_id : parseInt(req.body.post)},
+            {$inc : {comment : 1}},
+            (err, res) => {
+                console.log('게시글의 댓글 필드값 +1 성공');
             }
+        );
+    
+        db.collection('comment').insertOne(comment_info, (err, res) => {
+            console.log('comment successfully')
+          db.collection('commentCounter').updateOne({name:'댓글갯수'},{ $inc: {totalComment:1} },function(err, res){
+                response.status(201).send({'message':'OK'});
+            })
         })
-    })
+      })
 })
 
         
@@ -204,7 +213,7 @@ function getPost() {
     });
 }
 
-app.post('/post', (req,res) => {
+app.post('/post', (req,response) => {
 
     var today = new Date();
     var year = today.getFullYear();
@@ -216,25 +225,32 @@ app.post('/post', (req,res) => {
     var seconds = ('0' + today.getSeconds()).slice(-2); 
     var timeString = hours + ':' + minutes  + ':' + seconds; //포맷 = 15:47:29
 
-    getPost().then(function(data) { 
-        console.log('data:',data)
 
+    // db.collection('post').insertOne( post_info, (에러, 결과) => {
+    //     res.status(201).send({'message':'OK'});
+    // })
+
+    db.collection('counter').findOne({name : '게시물갯수'}, function(err, res){
+        var 총게시물갯수 = res.totalPost
         var post_info = {
-            _id: 89, 
+            _id: 총게시물갯수+1, 
             author : req.user.id, 
             authorID : req.user._id, 
             date : dateString, 
             title : req.body.title, 
             content : req.body.content, 
             type : req.body.type, 
-            like : 0
+            like : 0,
+            comment : 0
         }
-
-        db.collection('post').insertOne( post_info, (에러, 결과) => {
-            res.status(201).send({'message':'OK'});
-        })
-    })
     
+        db.collection('post').insertOne(post_info, (err, res) => {
+          db.collection('counter').updateOne({name:'게시물갯수'},{ $inc: {totalPost:1} },function(err, res){
+              console.log('총게시물갯수:', 총게시물갯수)
+            response.status(201).send({'message':'OK'});
+            })
+        })
+      })
 })
 
 
@@ -266,13 +282,13 @@ app.get('/qna/:id', (req, res) => {
     } )
 })
 
-app.get('/posts/:postID/comments', (req, res) => {
+app.get('/post/:postID/comments', (req, res) => {
     db.collection('comment').find({ post : req.params.postID }).toArray((err, result) => {
         res.json({ 'comments' : result })
     })
 })
 
-app.get('/posts/:postID/comments/:commentID', (req, res) => {
+app.get('/post/:postID/comment/:commentID', (req, res) => {
     db.collection('comment').findOne({ post : req.params.postID, _id : parseInt(req.params.commentID) }, (err, result) => {
         res.json({ 'comments' : result })
     })
@@ -344,8 +360,74 @@ db.collection('user').findOne({ id: 아이디 }, function (에러, 결과) {
 })
 }); 
 
+var authorlist = []; //게시글 작성한 유저 리스트
+var NoAuthorID = [];
 
 
+
+app.get('/test', (req, response) => {
+
+    // var Userlist = {}; //회원가입되어 있는 유저 리스트. {id : _id} 형태
+    // db.collection('user').find().toArray( (에러, 결과) => {
+    //     for (i = 0; i < 결과.length; i ++) {
+    //         Userlist[결과[i].id] = 결과[i]._id;
+    //         console.log(결과[i].id)
+    //         console.log(결과[i]._id)
+    //     };
+    //     // res.json({'Userlist':Userlist});
+    // });
+
+    // //comment 필드가 없는 post
+    var postID = [];
+    // var userList = [];
+    db.collection('post').find().toArray( (에러, 결과) => {
+        
+        for (i = 0; i < 결과.length; i ++) {
+            db.collection('post').updateOne( 
+                {_id : 결과[i]._id}, 
+                {$set : { comment : 0 }}, 
+                (err, result) => {  
+                    console.log('_id변경완료');
+                }
+             
+            );
+            // console.log(결과[i])
+        };
+        
+        
+    });
+
+    
+    response.send('OK');
+    
+
+
+    // db.collection('post').find().toArray( (에러, 결과) => {
+    //     for (i = 0; i < 결과.length; i ++){
+    //         if ((결과[i].authorID == undefined)) {
+    //             // NoAuthorID.push(결과[i].author);
+    //             // console.log('결과[i].authorID:',결과[i].authorID)
+    //             // console.log('결과[i].author:',결과[i].author)
+    //             // console.log('Userlist[결과[i].author]:',Userlist[결과[i].author])
+                
+                
+    //             db.collection('post').update( 
+    //                 {}, 
+    //                 {$set : { authorID : Userlist[결과[i].author] }}, 
+    //                 (err, result) => {
+    //                     // res.send('OK');
+    //                 }
+    //             );
+    //         }
+    //         // authorlist.push(결과[i].author);
+    //         // console.log('결과[i].authorID:',결과[i].authorID)
+    //     }; 
+    //     res.json({'Userlist':Userlist, 'NoAuthorID' : NoAuthorID});
+    //     console.log('OK');
+
+    // });
+});
+    
 
 // 리액트가 모든 라우팅을 담당하게 하는 코드
 app.get('*', function (요청, 응답) {
