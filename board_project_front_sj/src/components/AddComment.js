@@ -11,14 +11,13 @@ let AddCommentBox = styled.div`
     height : fit-content;  // 등록 버튼도 안에 있는거 아님?
     border : 1px solid darkgray;
     border-radius : 7px;
-    margin : auto;
-    margin-bottom : 30px;
+    margin : 20px auto;
     position : relative;
 `
 
 let InputCommentData = styled.textarea`
     width : 95%;
-    height : 70px;
+    min-height : 70px;  // 최소 높이 지정
     margin-top : 10px;
     margin-bottom : 3px;
     font-size : 14px;
@@ -66,18 +65,19 @@ function AddComment(props) {
         // 서버에 보낼 댓글 데이터
         let body = {
             post : props.id,
+            type : props.category,
             comment : comment
         };
 
         if (!comment) alert("내용을 입력하세요.");
         else {
-            console.log("post요청 해야징");
             console.log(('data:' + JSON.stringify(body)));
             axios.post("/comment", body)
             .then(response => {
-                if (response.data == "댓글추가 완료") {
-                    console.log("댓글 추가 완료");
-                    // 새로운 댓글이 바로 보이도록 코드 추가 필요
+                if (response.data.message == "OK") {
+                    alert("댓글 작성 완료!");
+                    e.target.reset();  // 댓글창 비우기
+                    props.setUpdateState({});  // 새로운 댓글이 바로 반영되도록
                 }
             }).catch((err) => {
                 console.log("tryAddComment 함수 에러");

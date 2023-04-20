@@ -14,12 +14,22 @@ function PostDetailsPage() {
 
     let {category, id} = useParams();
     let [post, setPost] = useState('');
+    let [comments, setComments] = useState([]);
+    let [updateState, setUpdateState] = useState();
 
     // 카테고리, 게시글 id에 맞는 데이터를 get 요청하는 함수
     let getPostData = () => {
         console.log(category, id);
         axios.get(`/${category}/${id}`).then(data => {
             setPost(data.data.data);
+        })
+    }
+
+    // 댓글 데이터 get 요청 함수
+    let getCommentsData = () => {
+        axios.get(`/post/${id}/comments`).then(data => {
+            console.log(data.data.comments);
+            setComments(data.data.comments);
         })
     }
 
@@ -32,11 +42,14 @@ function PostDetailsPage() {
         console.log("post:", post);
     }, []);
 
+    // 새 댓글 작성시 댓글 목록 업데이트 위한 get 요청
+    useEffect(() => { getCommentsData(); }, [updateState]);
+
     return (
         <div>
             <PostContent post={post}/>
-            { CommentData.map((data, i) => <Comment key={i} data={data}/>)   /* 댓글 개수만큼 나오도록 */}
-            <AddComment id={id}/>
+            { comments && comments.map((data, i) => <Comment key={i} data={data}/>)   /* 댓글 개수만큼 나오도록 */}
+            <AddComment category={category} id={id} setUpdateState={setUpdateState}/>
         </div>
     );
 }

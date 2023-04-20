@@ -129,7 +129,7 @@ function PreviewPosts(props) {
                                             navigate(`/${props.category}/${data._id}`);
                                             {/* e가 필요해서 Link 안 쓰고 그냥 onClick으로 해놓음 ...이게 먼말이더라 */}
                                         }}>{data.title}</Title>
-                                        <Comment>[0]</Comment>
+                                        <Comment>[{data.comment}]</Comment>
                                     </TitleInfo>
                                     {/* <td>{data.hits}</td> */}
                                     <td style={{ marginLeft : "auto", marginRight : "auto" }}>{data.date}</td>

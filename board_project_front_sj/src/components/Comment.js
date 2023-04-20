@@ -38,10 +38,10 @@ function Comment(props) {
         <>
             <OutsideBox>
                 <div style={{ position : "relative"}}>
-                    <Writer>{props.data.writer}</Writer>
-                    <Date>{props.data.date}</Date>
+                    <Writer>{props.data.author}</Writer>
+                    <Date>{props.data.time}</Date>
                 </div>
-                <Content>{props.data.content}</Content>
+                <Content>{props.data.comment}</Content>
             </OutsideBox>
             <hr style={{ width : "90%" }}/>
         </>

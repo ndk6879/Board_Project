@@ -149,7 +149,7 @@ function PostList(props) {
                     <TitleInfo onClick={(e) => { navigate(`/${props.category}/${data._id}`); }}>
                       {data.title}
                     </TitleInfo>
-                    <Comment>[0]</Comment>
+                    <Comment>[{data.comment}]</Comment>
                   </Td>
                   <Td>{data.date}</Td>
                   <Td>{data.author}</Td>
