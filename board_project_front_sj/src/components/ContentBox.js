@@ -117,7 +117,7 @@ function ContentBox() {
           >
             <option disabled value="default" style={{ display: "none" }}>게시판을 선택해주세요.</option>
             <option value="forum">Forum</option>
-            <option value="QA">Q&A</option>
+            <option value="qna">Q&A</option>
           </Select>
           <InputTitle
           placeholder="제목을 입력해주세요."
