@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
-//import ModifyBox from "../components/ModifyBox.js";
+import ModifyBox from "../components/ModifyBox.js";
 
 let OutsideBox = styled.div`
     width : 95%;  // 나중에 px로 바꿀 것 (전체화면 기준)
@@ -42,7 +42,7 @@ function ModifyPage() {
     return (
         <OutsideBox>
             <Header>수정하기</Header>
-            {/* <ModifyBox post={post} setPost={setPost}/> */}
+            <ModifyBox post={post}/>
         </OutsideBox>
     )
 }
