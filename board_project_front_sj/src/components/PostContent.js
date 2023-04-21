@@ -151,9 +151,9 @@ function PostContent(props) {
 
     // 로그인한 유저가 쓴 게시글에서만 수정, 삭제 버튼을 보이기 위한 기능
     // 유저 정보 확인 -> showBtn 값 바꿔줌
-    // id로 비교 -> _id로 비교하는 것으로 바꿔야 함
+    // id로 비교 -> _id로 비교하는 것으로 바꿔야 함  - OK
     useEffect(() => {
-        if (session.userData.id == props.post.author) setShowBtn(true);
+        if (session.userData._id == props.post.authorID) setShowBtn(true);
         else setShowBtn(false);
     })
 
