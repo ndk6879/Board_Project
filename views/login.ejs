@@ -23,6 +23,14 @@
         <label>비번</label> 
         <input type="text" class="form-control" name="pw"> 
       </div> 
+      <div class="form-group"> 
+        <label>닉네임</label> 
+        <input type="text" class="form-control" name="nickname"> 
+      </div> 
+      <div class="form-group"> 
+        <label>상태 메세지</label> 
+        <input type="text" class="form-control" name="statusMessage"> 
+      </div> 
       <button type="submit" class="btn btn-danger">회원가입</button> 
     </form> 
   </div> 
@@ -100,11 +108,9 @@
       $('.edit').click(() => {
         $.ajax({
         method : 'PUT',
-        url : '/post/78', //수정할 게시글 id로 넣어주기 
+        url : '/comment/71', //수정할 게시글 id로 넣어주기 
         data : { 
-          title : '수정 테스트1', //새로 수정된 제목 넣어주기
-          content : '수정 테스트1 입니다', //새로 수정된 내용 넣어주기
-          id : '78', //수정할 게시글 id로 넣어주기 
+          comment : '수정 테스트1 입니다', //새로 수정된 내용 넣어주기
           }
         }).done((res) => {
           console.log('수정 성공:', res)
@@ -119,15 +125,12 @@
     $('.delete').click(() => {
       $.ajax({
       method : 'DELETE',
-      url : '/post/79', //수진이가 게시글 id 넣어주기 
-      // data : {title : 'test 1',
-      //   content : 'test 1',
-      // id : 'test 1'} //수진이가 게시글 id 넣어주기 
+      url : '/comment/71',
 
     }).done((res) => {
-        console.log('삭제 성공:', res)
+        console.log('삭제 성공')
       }).fail((res) => {
-        console.log('실패:', res)
+        console.log('실패:')
       })
 
     })

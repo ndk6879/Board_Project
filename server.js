@@ -104,7 +104,13 @@ app.get('/', function(요청, 응답) {
 
 
 app.post('/signup', (req, res) => {
-    db.collection('user').insertOne({id : req.body.id , pw : req.body.pw}, (err, res) => {
+    signup_info = {
+        id : req.body.id, 
+        pw : req.body.pw,
+        nickname : req.body.nickname, 
+        statusMessage : req.body.statusMessage,
+    }
+    db.collection('user').insertOne(signup_info, (err, res) => {
         console.log('회원가입 성공')
     })
     res.status(201).send({'message' : 'OK'})
@@ -165,8 +171,29 @@ app.post('/comment', (req,response) => {
 })
 
         
-        
+app.put('/comment/:id', (req, res) => {
+    db.collection('comment').updateOne( 
+        {_id : parseInt(req.params.id)}, 
+        {$set : { comment : req.body.comment }}, 
+        (err, result) => {
+            console.log('req.body.comment:',req.body.comment)
+            console.log('댓글 수정 완료')
 
+            res.status(202).send({'message' : 'OK'})
+        }
+        );
+  });        
+
+app.delete('/comment/:id', (req, res) => {
+    req.body._id =  parseInt(req.params.id)
+    db.collection('comment').deleteOne( 
+        {_id : parseInt(req.params.id)}, 
+        (err, result) => {
+            console.log('댓글 삭제 완료')
+        }
+        );
+    res.status(204).send({'message' : 'OK'})
+}); 
 
 app.get('/login', function(요청, 응답) {
     응답.render('login.ejs');
@@ -385,7 +412,7 @@ app.get('/test', (req, response) => {
         for (i = 0; i < 결과.length; i ++) {
             db.collection('post').updateOne( 
                 {_id : 결과[i]._id}, 
-                {$set : { comment : 0 }}, 
+                {$set : { like : 0 }}, 
                 (err, result) => {  
                     console.log('_id변경완료');
                 }
