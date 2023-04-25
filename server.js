@@ -141,11 +141,12 @@ app.post('/comment', (req,response) => {
         var day = ('0' + today.getDate()).slice(-2);
         var hours = ('0' + today.getHours()).slice(-2); 
         var minutes = ('0' + today.getMinutes()).slice(-2);
-        var dateString = year + '.' + month  + '.' + day + '.' + hours  + '.' + minutes;
+        var dateString = year + '.' + month  + '.' + day + ' ' + hours  + ':' + minutes;
         
         var comment_info = {
             _id : 총댓글갯수+1,
             author : req.user.id, 
+            _author : req.user._id,
             post : req.body.post, 
             type : req.body.type,
             comment : req.body.comment, 
@@ -163,6 +164,8 @@ app.post('/comment', (req,response) => {
     
         db.collection('comment').insertOne(comment_info, (err, res) => {
             console.log('comment successfully')
+            console.log('dateString:',dateString)
+            console.log('_author:',req.user._id)
           db.collection('commentCounter').updateOne({name:'댓글갯수'},{ $inc: {totalComment:1} },function(err, res){
                 response.status(201).send({'message':'OK'});
             })
