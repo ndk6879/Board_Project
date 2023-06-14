@@ -8,15 +8,16 @@ import { useNavigate } from "react-router-dom";
 import openEyeImg from "../img/open_eye.png";
 import closedEyeImg from "../img/closed_eye.png";
 
-let OutsideBox = styled.div`
+const OutsideBox = styled.div`
     width : 400px;
-    height : 570px;
+    height : 650px;
     border : 1px solid #E7E7E7;
     background-color : #FEFDFC;
     margin : auto;
+    margin-bottom : 100px;
 `
 
-let Header = styled.div`
+const Header = styled.div`
     width : 300px;
     height : 30px;
     margin : 20px auto;
@@ -26,18 +27,19 @@ let Header = styled.div`
 `
 
 // id, pw 입력
-let SignupData = styled.div`
+const SignupData = styled.div`
+    //border : 1px solid gray;
     width : 300px;
-    height : 300px;
+    height : 420px;
     margin : auto;
     margin-top : 50px;
 `
 // 제목 (아이디, 비밀번호, 비밀번호 확인)
-let Category = styled.div`
+const Category = styled.div`
     height : 70px;
 `
 
-let CategoryTitle = styled.div`
+const CategoryTitle = styled.div`
     height : 20px;
     font-size : 15px;
     text-align : left;
@@ -45,23 +47,24 @@ let CategoryTitle = styled.div`
 `
 
 // Input + Button
-let InputBox = styled.div`
+const InputBox = styled.div`
     width : 300px;
     height : 33px;
     //border : 1px solid red;
     border-bottom : 1px solid gray;
 `
 
-let InputSignupData = styled.input`
+const InputSignupData = styled.input`
     width : 250px;
     height : 25px;
     float : left;
     border : 0px;
     margin-top : 5px;  // 바닥에 붙이려고
     outline : none;  // 포커스 시에도 테두리 보이지 않도록
+    background-color : #FEFDFC;
 `
 
-let CheckData = styled.div`
+const CheckData = styled.div`
     margin-top : 3px;
     float: left;
     text-align: left;
@@ -69,25 +72,25 @@ let CheckData = styled.div`
     color : tomato;
 `
 
-let CheckPwBtn = styled.div`
+const CheckPwBtn = styled.div`
     float : right;
     cursor : pointer;
 `
 
-let Img = styled.img`
+const Img = styled.img`
     height : 23px;
     margin-top : 8px;
     margin-right : 3px;
     //border : 1px solid darkblue;
 `
 
-let ButtonBox = styled.div`
+const ButtonBox = styled.div`
     width : 300px;
     height : 30px;
     margin : auto;
 `
 
-let SignupBtn = styled.button`
+const SignupBtn = styled.button`
     float : right;
     width : 80px;
     height : 28px;
@@ -105,18 +108,19 @@ let SignupBtn = styled.button`
 
 function Signup() {
 
-    let [userData, setUserData] = useState('');
+    const [userData, setUserData] = useState('');
 
-    let [inputId, setInputId] = useState('');
-    let [inputPw, setInputPw] = useState('');
-    let [reInputPw, setReInputPw] = useState('');
+    const [inputId, setInputId] = useState('');
+    const [inputNickname, setInputNickname] = useState('');
+    const [inputPw, setInputPw] = useState('');
+    const [reInputPw, setReInputPw] = useState('');
 
     // 아이디 체크하는데 state 너무 많이 쓰나
-    let [checkId, setCheckId] = useState('');
-    let [checkPw, setCheckPw] = useState('');
-    let [isAvailableId, setIsAvailableId] = useState(false);
+    const [checkId, setCheckId] = useState('');
+    const [checkPw, setCheckPw] = useState('');
+    const [isAvailableId, setIsAvailableId] = useState(false);
 
-    let navigate = useNavigate();
+    const navigate = useNavigate();
 
     //아이디 중복 여부 확인 멘트
     useEffect(() => {
@@ -157,13 +161,13 @@ function Signup() {
     }, [inputPw, reInputPw]);
 
     // 눈 모양 아이콘 누르면 2초동안 입력한 비밀번호 보여줌
-    let [hidePw1, setHidePw1] = useState(true);
-    let [hidePw2, setHidePw2] = useState(true);
-    let checkPw1 = () => {
+    const [hidePw1, setHidePw1] = useState(true);
+    const [hidePw2, setHidePw2] = useState(true);
+    const checkPw1 = () => {
         setHidePw1(false)
         setTimeout(() => setHidePw1(true), 2000)
     }
-    let checkPw2 = () => {
+    const checkPw2 = () => {
         setHidePw2(false)
         setTimeout(() => setHidePw2(true), 2000)
     }
@@ -177,13 +181,15 @@ function Signup() {
         - ID, PW, PW확인 중 하나라도 입력되지 않았을 때
         - PW와 PW확인 값이 다를 때
     */
-    let trySignup = (e) => {
+    const trySignup = (e) => {
         e.preventDefault();
 
         // 서버에 보낼 ID, PW
-        let body = {
+        const body = {
             id : inputId,
-            pw : inputPw
+            pw : inputPw,
+            nickname : inputNickname,
+            statusMessage : ''  // 없앨 예정
         };
 
         console.log(body);
@@ -191,11 +197,11 @@ function Signup() {
         // return vs else
         if (!inputId) alert("ID를 입력하세요.");
         else if (!isAvailableId) alert("이미 존재하는 ID입니다.");
+        else if (!inputNickname) alert("닉네임을 입력하세요.");
         else if (!inputPw) alert("PW를 입력하세요.");
         else if (!reInputPw) alert("PW를 다시 입력하세요.");
         else if (inputPw != reInputPw) alert("PW를 확인하세요.");
         else {
-            // 회원가입 완료!가 오는듯 근데 왜 response.data.message가 아니지
             axios.post("/signup", body)
             .then(response => {
                 console.log("response.data:", response.data);
@@ -222,6 +228,12 @@ function Signup() {
                             <InputSignupData onChange={ e => setInputId(e.target.value) }/>
                         </InputBox>
                         <CheckData>{ checkId }</CheckData>
+                    </Category>
+                    <Category>
+                        <CategoryTitle>닉네임</CategoryTitle>
+                        <InputBox>
+                            <InputSignupData onChange={ e => setInputNickname(e.target.value) }/>
+                        </InputBox>
                     </Category>
                     <Category>
                         <CategoryTitle>비밀번호</CategoryTitle>
