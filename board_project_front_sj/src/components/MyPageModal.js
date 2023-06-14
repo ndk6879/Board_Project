@@ -9,7 +9,7 @@ import { setIsLoggedIn, setUserData, setMyPageModal } from "../store.js";
 
 import userImg from "../img/user.png";
 
-let Background = styled.div`
+const Background = styled.div`
     position : absolute;
     width : 100vw;
     height : 100vh;
@@ -17,7 +17,7 @@ let Background = styled.div`
     z-index : 150;  // 캐러셀 버튼 z-index가 100임
 `
 
-let ModalBox = styled.div`
+const ModalBox = styled.div`
     width : 300px;
     height : 200px;
     float : right;
@@ -29,7 +29,7 @@ let ModalBox = styled.div`
     text-align : center;
 `
 
-let ProfileBox = styled.div`
+const ProfileBox = styled.div`
     width : 270px;
     height : 135px;
     border : 1px solid gray;
@@ -37,7 +37,7 @@ let ProfileBox = styled.div`
     margin-top: 3px;
 `
 
-let UserProfile = styled.img`
+const UserProfile = styled.img`
     width : 80px;
     height : 80px;
     float : left;
@@ -45,7 +45,7 @@ let UserProfile = styled.img`
     margin-left : 20px;
 `
 
-let UserInfo = styled.div`
+const UserInfo = styled.div`
     float : left;
     display : flex;
     align-items : left;
@@ -55,7 +55,7 @@ let UserInfo = styled.div`
     font-size : 15px;
 `
 
-let BtnInProfile = styled.button`
+const BtnInProfile = styled.button`
     background-color : lightgray;
     width : 140px;
     height : 30px;
@@ -67,7 +67,7 @@ let BtnInProfile = styled.button`
     cursor : pointer;
 `
 
-let LogoutBtn = styled.button`
+const LogoutBtn = styled.button`
     background-color : powderblue;
     width : 270px;
     height : 35px;
@@ -81,8 +81,8 @@ let LogoutBtn = styled.button`
 // 로그인 상태에서 상단바의 'My Page / Logout' 을 누르면 보여줄 모달
 function MyPageModal() {
 
-    let navigate = useNavigate();
-    let dispatch = useDispatch();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     let session = useSelector((state) => state.session);
 
     useEffect(() => { console.log("before logout:", session) }, []);
@@ -93,7 +93,7 @@ function MyPageModal() {
     - 로그인 상태 저장하는 state를 false로
     - 로그인한 유저 정보를 저장하는 state 비우기
     */
-    let logout = e => {
+    const logout = e => {
         e.preventDefault();
 
         axios.post("/logout", "logout")
@@ -116,7 +116,7 @@ function MyPageModal() {
             <ModalBox onClick={ e => e.stopPropagation() }>
                 <ProfileBox>
                     <UserProfile src={userImg}/>
-                    <UserInfo>{session.userData.id}님 안녕하세용</UserInfo>
+                    <UserInfo>{session.userData.id}님</UserInfo>
                     <BtnInProfile onClick={() => { 
                         navigate("/mypage");
                         dispatch(setMyPageModal(false));
