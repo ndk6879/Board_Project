@@ -1,3 +1,4 @@
+const crypto = require('crypto')
 const express = require('express');
 const path = require('path');
 const app = express();
@@ -54,6 +55,9 @@ app.use(session({secret : '비밀코드', resave : true, saveUninitialized: fals
 app.use(passport.initialize());
 app.use(passport.session()); 
 
+
+
+
 app.post('/test', (req, res) => {
     res.status(200).send({'message' : '없쪄!'})
 })
@@ -104,14 +108,21 @@ app.get('/', function(요청, 응답) {
 
 
 app.post('/signup', (req, res) => {
+    const salt = crypto.randomBytes(32).toString('base64')
+    const hashedPw = crypto.pbkdf2Sync(req.body.pw, salt, 1, 32, 'sha512').toString('base64') //digest = salt + pw
+
     signup_info = {
         id : req.body.id, 
-        pw : req.body.pw,
+        pw : hashedPw,
+        salt : salt,
         nickname : req.body.nickname, 
         statusMessage : req.body.statusMessage,
-    }
+    } 
+    
     db.collection('user').insertOne(signup_info, (err, res) => {
         console.log('회원가입 성공')
+        console.log(`pw : ${req.body.pw} , salt : ${salt} , hashedPW1: ${hashedPw}`)
+
     })
     res.status(201).send({'message' : 'OK'})
 })
@@ -141,11 +152,12 @@ app.post('/comment', (req,response) => {
         var day = ('0' + today.getDate()).slice(-2);
         var hours = ('0' + today.getHours()).slice(-2); 
         var minutes = ('0' + today.getMinutes()).slice(-2);
-        var dateString = year + '.' + month  + '.' + day + '.' + hours  + '.' + minutes;
+        var dateString = year + '.' + month  + '.' + day + ' ' + hours  + ':' + minutes;
         
         var comment_info = {
             _id : 총댓글갯수+1,
             author : req.user.id, 
+            _author : req.user._id,
             post : req.body.post, 
             type : req.body.type,
             comment : req.body.comment, 
@@ -163,6 +175,8 @@ app.post('/comment', (req,response) => {
     
         db.collection('comment').insertOne(comment_info, (err, res) => {
             console.log('comment successfully')
+            console.log('dateString:',dateString)
+            console.log('_author:',req.user._id)
           db.collection('commentCounter').updateOne({name:'댓글갯수'},{ $inc: {totalComment:1} },function(err, res){
                 response.status(201).send({'message':'OK'});
             })
@@ -352,24 +366,27 @@ passport.use(new LocalStrategy({
     passReqToCallback: false, // 아이디/비번말고 다른 정보검사가 필요한지)
     }, function (입력한아이디, 입력한비번, done) {
     console.log('입력한아이디:',입력한아이디, '입력한비번:',입력한비번);
-    db.collection('user').findOne({ id: 입력한아이디, pw: 입력한비번}, function (에러, 결과) {
+    db.collection('user').findOne({ id: 입력한아이디}, function (에러, 결과) {
         /*
         에러, 결과는 null이고 결과가 맞으면 { _id: 638d7674ff68b04761143c0f, id: 'test', pw: 'test' }
         */
         if (에러) return done(에러)
     
         if (!결과) return done(null, false, { message: '존재하지않는 아이디요' })
-        if (입력한비번 == 결과.pw) {
+
+        
+        const hashedPw = crypto.pbkdf2Sync(입력한비번, 결과.salt, 1, 32, 'sha512').toString('base64') //digest = salt + pw
+        if (hashedPw == 결과.pw) {
             
         return done(null, 결과)
         } else {
-        return done(null, false, { message: 'ㄹ비번틀렸어요' })
+        return done(null, false, { message: '비번틀렸어요' })
         }
     })
     }));
 // user: 회원가입, deesrializer user.요청
 
-
+ 
 /* 
 serializer
 : 입력한 아이디/비번이 db의 값과 맞다면 -> 세션 방식이 적용됨. 그래서 세션 데이터를 만들어줘야함.(라브가 함) 그리고 세션 데이터에 세션아이디를 발급해 유저에게 보내야함. (i.e. 쿠키로 만들어서 보내주면됨. )
