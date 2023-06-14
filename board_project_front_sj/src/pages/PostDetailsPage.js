@@ -12,13 +12,13 @@ import CommentData from "../store/CommentData.js";  // 댓글 출력 테스트
 
 function PostDetailsPage() {
 
-    let {category, id} = useParams();
-    let [post, setPost] = useState('');
-    let [comments, setComments] = useState([]);
-    let [updateState, setUpdateState] = useState();
+    const {category, id} = useParams();
+    const [post, setPost] = useState('');
+    const [comments, setComments] = useState([]);
+    const [updateState, setUpdateState] = useState();
 
     // 카테고리, 게시글 id에 맞는 데이터를 get 요청하는 함수
-    let getPostData = () => {
+    const getPostData = () => {
         console.log(category, id);
         axios.get(`/${category}/${id}`).then(data => {
             setPost(data.data.data);
@@ -26,7 +26,7 @@ function PostDetailsPage() {
     }
 
     // 댓글 데이터 get 요청 함수
-    let getCommentsData = () => {
+    const getCommentsData = () => {
         axios.get(`/post/${id}/comments`).then(data => {
             console.log(data.data.comments);
             setComments(data.data.comments);
@@ -48,7 +48,7 @@ function PostDetailsPage() {
     return (
         <div>
             <PostContent post={post}/>
-            { comments && comments.map((data, i) => <Comment key={i} data={data}/>)   /* 댓글 개수만큼 나오도록 */}
+            { comments && comments.map((data, i) => <Comment key={i} category={category} id={id} data={data} setUpdateState={setUpdateState}/>)   /* 댓글 개수만큼 나오도록 */}
             <AddComment category={category} id={id} setUpdateState={setUpdateState}/>
         </div>
     );

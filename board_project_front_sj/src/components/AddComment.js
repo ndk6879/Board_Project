@@ -4,9 +4,10 @@ import styled from "styled-components";
 import { useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
+import { setForumData, setQnaData } from "../store.js";
 import { setLoginModal } from "../store.js";
 
-let AddCommentBox = styled.div`
+const AddCommentBox = styled.div`
     width : 90%;
     height : fit-content;  // 등록 버튼도 안에 있는거 아님?
     border : 1px solid darkgray;
@@ -15,7 +16,7 @@ let AddCommentBox = styled.div`
     position : relative;
 `
 
-let InputCommentData = styled.textarea`
+const InputCommentData = styled.textarea`
     width : 95%;
     min-height : 70px;  // 최소 높이 지정
     margin-top : 10px;
@@ -24,12 +25,12 @@ let InputCommentData = styled.textarea`
     resize : vertical;
 `
 
-let BtnBox = styled.div`
+const BtnBox = styled.div`
     height : 30px;
     margin-bottom : 7px;
 `
 
-let AddCommentBtn = styled.button`
+const AddCommentBtn = styled.button`
     background-color : powderblue;
     width : 45px;
     height : 30px;
@@ -47,12 +48,29 @@ let AddCommentBtn = styled.button`
 
 function AddComment(props) {
 
-    let dispatch = useDispatch();
+    const dispatch = useDispatch();
+    const forumData = useSelector((state) => state.postData.forum);
+    const qnaData = useSelector((state) => state.postData.qna);
 
-    let [comment, setComment] = useState('');
-    let isLoggedIn = useSelector((state) => state.session.isLoggedIn);
+    const [comment, setComment] = useState('');
+    const isLoggedIn = useSelector((state) => state.session.isLoggedIn);
+    
+    // 서버에서 게시글 데이터 가져오기
+    // 댓글 작성 후 변경사항 바로 반영되도록
+    const pullData = () => {
+      axios.get("/forum").then(data => {
+        let copiedForumData = [...forumData];
+        copiedForumData = data.data.data;
+        dispatch(setForumData(copiedForumData));
+      })
+      axios.get("/qna").then(data => {
+        let copiedQnaData = [...qnaData];
+        copiedQnaData = data.data.data;
+        dispatch(setQnaData(copiedQnaData));
+      })
+    }
 
-    let tryAddComment = (e) => {
+    const tryAddComment = (e) => {
         e.preventDefault();
 
         // 로그인 여부 확인
@@ -63,7 +81,7 @@ function AddComment(props) {
         }
 
         // 서버에 보낼 댓글 데이터
-        let body = {
+        const body = {
             post : props.id,
             type : props.category,
             comment : comment
@@ -78,6 +96,7 @@ function AddComment(props) {
                     alert("댓글 작성 완료!");
                     e.target.reset();  // 댓글창 비우기
                     props.setUpdateState({});  // 새로운 댓글이 바로 반영되도록
+                    pullData();
                 }
             }).catch((err) => {
                 console.log("tryAddComment 함수 에러");

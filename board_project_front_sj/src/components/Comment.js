@@ -1,48 +1,18 @@
 /* eslint-disable */
 
-import styled from "styled-components";
+import { useState } from "react";
 
-let OutsideBox = styled.div`
-    width : 90%;
-    height : fit-content;
-    margin : auto;
-    margin-top : 20px;
-    margin-bottom : 20px;
-`
+import ShowComment from './ShowComment';
+import ModifyComment from './ModifyComment';
 
-let Writer = styled.div`
-    width : fit-content;
-    text-align : left;
-    padding-left : 10px;
-    float : left;
-`
-
-let Date = styled.div`
-    width : 20px;
-    padding-left : 15px;
-    float : left;
-    font-size : 13px;
-`
-
-let Content = styled.div`
-    clear : left;
-    padding : 12px;
-    text-align : left;
-    padding-left : 10px;
-    height : fit-content;
-    white-space : pre-line;
-`
 
 function Comment(props) {
+    let [showComment, setShowComment] = useState(true);
+
     return (
         <>
-            <OutsideBox>
-                <div style={{ position : "relative"}}>
-                    <Writer>{props.data.author}</Writer>
-                    <Date>{props.data.time}</Date>
-                </div>
-                <Content>{props.data.comment}</Content>
-            </OutsideBox>
+            {showComment && <ShowComment category={props.category} id={props.id} data={props.data} setShowComment={setShowComment} setUpdateState={props.setUpdateState}/>}
+            {!showComment && <ModifyComment data={props.data} setShowComment={setShowComment} setUpdateState={props.setUpdateState}/>}
             <hr style={{ width : "90%" }}/>
         </>
     );
