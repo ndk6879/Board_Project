@@ -143,7 +143,7 @@ function getComment() {
 
 app.post('/comment', (req,response) => {
 
-    db.collection('commentCounter').findOne({name : '댓글갯수'}, function(err, res){
+    db.collection('commentCounter').findOne({_id : '댓글갯수'}, function(err, res){
         var 총댓글갯수 = res.totalComment;
 
         var today = new Date();
@@ -407,7 +407,66 @@ db.collection('user').findOne({ id: 아이디 }, function (에러, 결과) {
 var authorlist = []; //게시글 작성한 유저 리스트
 var NoAuthorID = [];
 
+app.get('/forum/:id', (req, res) => {
+    db.collection('post').findOne( { _id : parseInt(req.params.id), type : 'forum'}, (err, result) => {
+        res.json({
+            'data':result,
+        })
+    } )
+})
 
+app.post('/posts/:post_id/likes', (req, res) => {
+    db.collection('post').updateOne( 
+        {_id : parseInt(req.params.id)},  
+        {$push : { liked_users : req.user.id}}, 
+        (err, result) => {
+            res.status(202).send({'message' : 'OK'})
+            res.status(201).json({ success: true, message: '게시글에 좋아요가 추가되었습니다.' });
+        }
+    );
+});
+
+app.post('/posts/:post_id/comments/:comment_id/likes', (req, res) => {
+    db.collection('comments').updateOne( 
+        {post : parseInt(req.params.post), _id : req.params.comment_id},  
+        {$push : { liked_users : req.user.id}}, 
+        (err, result) => {
+            res.status(201).json({ success: true, message: '댓글에 좋아요가 추가되었습니다.' });
+        }
+    );
+});
+
+app.put('/post/:id', (req, res) => {
+    db.collection('post').updateOne( 
+        {_id : parseInt(req.params.id)}, 
+        {$set : { title : req.body.title, content : req.body.content }}, 
+        (err, result) => {
+            console.log('req.body.title:',req.body.title)
+            console.log('req.body.content:',req.body.content)
+            console.log('req.body.id:',req.body.id)
+            // console.log('result:',result)
+            res.status(202).send({'message' : 'OK'})
+        }
+        );
+  });
+
+app.get('/forum/:id', (req, res) => {
+    db.collection('post').findOne( { _id : parseInt(req.params.id), type : 'forum'}, (err, result) => {
+        res.json({
+            'data':result,
+        })
+    } )
+})
+app.delete('/post/:id', (req, res) => {
+    req.body._id =  parseInt(req.params.id)
+    db.collection('post').deleteOne( 
+        {_id : parseInt(req.params.id)}, 
+        (err, result) => {
+            console.log('result:',result)
+        }
+        );
+    res.status(200).send({'message' : 'OK'})
+}); 
 
 app.get('/test', (req, response) => {
 
@@ -422,14 +481,14 @@ app.get('/test', (req, response) => {
     // });
 
     // //comment 필드가 없는 post
-    var postID = [];
+    // var postID = [];
     // var userList = [];
     db.collection('post').find().toArray( (에러, 결과) => {
         
         for (i = 0; i < 결과.length; i ++) {
             db.collection('post').updateOne( 
                 {_id : 결과[i]._id}, 
-                {$set : { like : 0 }}, 
+                {$rename : { 'like' : 'likes' }}, 
                 (err, result) => {  
                     console.log('_id변경완료');
                 }
