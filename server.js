@@ -78,12 +78,23 @@ app.put('/post/:id', (req, res) => {
 
 app.delete('/post/:id', (req, res) => {
     req.body._id =  parseInt(req.params.id)
+
     db.collection('post').deleteOne( 
         {_id : parseInt(req.params.id)}, 
         (err, result) => {
             console.log('result:',result)
         }
-        );
+    );
+
+    db.collection('counter').updateOne( 
+        {name : "게시물갯수"}, 
+        {$inc : {totalPost : -1}},
+        (err, result) => {
+            console.log('게시글이 삭제되었습니다')
+        }
+    );
+
+
     res.status(200).send({'message' : 'OK'})
 }); 
 
@@ -143,7 +154,7 @@ function getComment() {
 
 app.post('/comment', (req,response) => {
 
-    db.collection('commentCounter').findOne({_id : '댓글갯수'}, function(err, res){
+    db.collection('commentCounter').findOne({name : '댓글갯수'}, function(err, res){
         var 총댓글갯수 = res.totalComment;
 
         var today = new Date();
@@ -183,7 +194,6 @@ app.post('/comment', (req,response) => {
         })
       })
 })
-
         
 app.put('/comment/:id', (req, res) => {
     db.collection('comment').updateOne( 
@@ -198,6 +208,20 @@ app.put('/comment/:id', (req, res) => {
         );
   });        
 
+app.get('/posts', (req,res) => {
+    db.collection('post').find().toArray((에러, 결과) => {
+        res.json(결과)
+    });
+
+})
+  
+app.get('/comments', (req,res) => {
+    db.collection('comment').find().toArray((에러, 결과) => {
+        res.json(결과)
+    });
+
+})
+
 app.delete('/comment/:id', (req, res) => {
     req.body._id =  parseInt(req.params.id)
     db.collection('comment').deleteOne( 
@@ -205,7 +229,17 @@ app.delete('/comment/:id', (req, res) => {
         (err, result) => {
             console.log('댓글 삭제 완료')
         }
-        );
+    );
+
+    db.collection('commentCounter').updateOne( 
+        {name : "댓글갯수"}, 
+        {$inc : {totalComment : -1}},
+        (err, result) => {
+            console.log('댓글이 삭제되었습니다')
+        }
+    );
+
+
     res.status(204).send({'message' : 'OK'})
 }); 
 
@@ -366,21 +400,18 @@ passport.use(new LocalStrategy({
     passReqToCallback: false, // 아이디/비번말고 다른 정보검사가 필요한지)
     }, function (입력한아이디, 입력한비번, done) {
     console.log('입력한아이디:',입력한아이디, '입력한비번:',입력한비번);
-    db.collection('user').findOne({ id: 입력한아이디}, function (에러, 결과) {
+    db.collection('user').findOne({ id: 입력한아이디, pw: 입력한비번}, function (에러, 결과) {
         /*
         에러, 결과는 null이고 결과가 맞으면 { _id: 638d7674ff68b04761143c0f, id: 'test', pw: 'test' }
         */
         if (에러) return done(에러)
     
         if (!결과) return done(null, false, { message: '존재하지않는 아이디요' })
-
-        
-        const hashedPw = crypto.pbkdf2Sync(입력한비번, 결과.salt, 1, 32, 'sha512').toString('base64') //digest = salt + pw
-        if (hashedPw == 결과.pw) {
+        if (입력한비번 == 결과.pw) {
             
         return done(null, 결과)
         } else {
-        return done(null, false, { message: '비번틀렸어요' })
+        return done(null, false, { message: 'ㄹ비번틀렸어요' })
         }
     })
     }));
@@ -457,16 +488,6 @@ app.get('/forum/:id', (req, res) => {
         })
     } )
 })
-app.delete('/post/:id', (req, res) => {
-    req.body._id =  parseInt(req.params.id)
-    db.collection('post').deleteOne( 
-        {_id : parseInt(req.params.id)}, 
-        (err, result) => {
-            console.log('result:',result)
-        }
-        );
-    res.status(200).send({'message' : 'OK'})
-}); 
 
 app.get('/test', (req, response) => {
 
