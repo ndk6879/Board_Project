@@ -41,7 +41,7 @@ MongoClient.connect(process.env.DB_URL, function(에러, client){
   if (에러) return console.log(에러)
   db = client.db('ProjectA');
   app.listen(process.env.PORT, function() {
-    console.log('listening on 8080 :)')
+    console.log('listening on 8080 :). DB connected successfully')
   })
 })
 
@@ -268,6 +268,7 @@ app.post('/logout', function(req,res){
     });
 });
 
+//git diff test
 
 app.get('/mypage', 로그인했니, function (요청, 응답) { 
     console.log('마이페이지의 요청.user:', 요청.user); 
